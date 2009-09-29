@@ -1,0 +1,29 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+</head>
+<body>
+<h1>Wall database</h1>
+<table>
+<tr>
+	<td><a href="/settings"> Manage your account</a></td><td> - </td>
+	<td><a href="/static/html/testBed_main.html">Test Bed</a></td><td> - </td>
+	<td><a href="/static/html/tutorialMain.html">Tutorials</a></td><td> - </td>
+	<td><a href="/admin">Admin page</a></td><td> - </td>
+	<td><a href="{{login_url}}">{{login_link}}</a></td><td> - </td>
+	{%if user_email %}<td>Current User : {{user_email}}</td>{%endif%}
+</tr>
+</table>
+<hr>
+(Version 0-3-4-beta)<br>
+<a href="/static/html/email.html">Send me an email</a>
+<p>
+First of all this project is still under development. 
+Idea is create a easy to use tool for post management. 
+This project will keep posts for your site and I will give you tools to get your posts and post texts.
+I currently give posts back in an html table, if you need them in different format please send me an email.
+You can also use postdatabase for paging purposes (tutorial page is an example).
+Or you can use it to get post but not display it.(we can even send your posts to you as email.email link above is an example to that).
+</p>
+</body>
+</html>

@@ -1,0 +1,13 @@
+You have a new post on postdatabase.
+
+wall name = {{post.wall.name}}
+wall id={{post.wall.key.id}}
+
+date of post = {{ post.date|date:"r"}}
+
+{{post.wall.nickLabel}} = {{post.nick}}
+{{post.wall.nick2Label}} = {{post.nick2}}
+
+{{post.wall.postAreaLabel}}
+----------------------------------
+{{post.value}}
