@@ -1,0 +1,163 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/main.css"/>
+<script type="text/javascript" src="/static/js/pdbAjax.js"></script>
+<script type="text/javascript" src="/static/js/pdb_client.js"></script>
+<script type="text/javascript">
+function NameValidator(){
+	nameList = new Array({% for w in walls %}{%if not forloop.first %},{% endif %}'{{w.name }}' {% endfor %});
+	function isUnique(name){
+		result = true;
+		for(var i = 0 ; i<nameList.length;i++){
+			if (nameList[i] === name ){
+				result = false;
+				break;
+			}
+		}//for
+		return result;
+	}//function isUniqueName
+	this.isUnique = isUnique;
+}
+</script>
+<script type="text/javascript" src="/static/js/wall_validation.js">
+</script>
+</head>
+<body>
+<h1>Edit Wall</h1>
+<a href="/settings">Return to settings page</a>
+<hr>
+<ul>
+	<li>Wall name must be unique. if you dont give it a unique name,your wall will not be created.</li>
+	<li>Only Letters and numbers are allowed on wall name.</li>
+	<li>Wall name can not be null</li>
+</ul>
+{% include "wallForm.html" %}
+Number of posts:{{post_number}} - <a href="/wall/clear?id={{ wall.key.id }}">Clear all posts</a>
+<script type="text/javascript">
+	c = new PDBAjaxConnection({{ wall.key.id }});
+	c.post = function(callback,postValue,nick,nick2,id){
+			var url = '/post/save'
+			var data = 'id='+this.wallid;
+
+			if(postValue){
+				data += '&post=' + encodeURI(postValue); 
+			}
+			if(nick){
+				data += '&nick=' + encodeURI(nick); 
+			}
+			if(nick2){
+				data += '&nick2=' + encodeURI(nick2); 
+			}
+			if(id){
+				data += '&postid=' + encodeURI(id); 
+			}
+			this.downloadURL(url,'POST',callback,data);
+		}
+	document.writeln('<div id="pdbDiv{{ wall.key.id }}"></div>');
+	w = new PDBWizard(c,'w',document.getElementById('pdbDiv{{ wall.key.id }}'));
+	w.getPostString =function (id,nick,nick2,date,value,order){
+		var txt ='<tr><td><table border="1" class="list"><tr><td>';
+		txt +='<tr><td colspan="2">' + this.nickLabel +'</td><td colspan="2">'+nick+'</tr>';
+		txt +='<tr><td colspan="2">' + this.nick2Label +'</td><td colspan="2">'+nick2+'</tr>';
+		txt +='<tr><td colspan="4">' + date + '</td></tr>';
+		txt +='<tr><td colspan="4"><fieldset><legend>'+ this.postAreaLabel +'</legend>' + value + '</fieldset></td></tr>';
+		txt +='<tr><td><input type="button" value="Move Up" onclick="javascript:'+ this.variableName +'.movePost('+ id +','+((order+1+(this.pageNumber-1)*this.pageSize)-1)+')" ';
+		if (i==0){
+			txt += ' disabled="disabled"/></td>';
+		}else{
+			txt += '/></td>'
+		}
+		txt +='<td><input type="button" value="Move Down" onclick="javascript:'+ this.variableName +'.movePost('+ id +','+((order+1+(this.pageNumber-1)*this.pageSize)+1)+')" ';
+		if (i==this.wall.posts.length-1){
+			txt += ' disabled="disabled"/></td>';
+		}else{
+			txt += ' /></td>'
+		}
+		txt +='<td><input type="button" value="Edit" onclick="javascript:'+ this.variableName +'.editPost('+ id +')"/></td>';
+		txt +='<td><input type="button" value="Delete" onclick="javascript:'+ this.variableName +'.deletePost('+ id +')"/></td>';
+		txt +='</table></td></tr>';
+		return txt;
+	}
+	w.getPrePostString = function (wall){
+		return '<table><tr><th>Posts on this wall</th></tr><tr><td>' + this.getPageList(wall) + '</td></tr>';
+	}
+	w.getPostPostString =	function (wall){
+			return '<tr><td colspan="3">' + this.getPageList(wall) + '</td><tr></table>';
+	}
+
+	w.movePost = function(id,targetOffset){
+		this.pDBConnection.movePost(this.variableName +'.movePostCallBack' , id ,targetOffset);
+	}
+	w.movePostCallBack = function(result){
+		if(result){
+			w.printPosts(this.wall.currentPage,this.wall.postsPerPage);
+		}else
+		{
+			alert('Server Error: Post Could not be moved');
+		};
+	}
+	w.deletePost = function(id){
+		this.pDBConnection.deletePost(this.variableName +'.deletePostCallBack' , id);
+	}
+    w.deletePostCallBack = function(result){
+    		if(result){
+    			w.printPosts(this.wall.currentPage,this.wall.postsPerPage);
+    		}else
+    		{
+    			alert('Server Error: Post Could not be deleted');
+    		};
+    	}
+
+	w.printForm = function(){
+		//set postButtonLbl
+		var postButtonLbl = 'Post';
+		if (this.postButtonLabel){
+			postButtonLbl = this.postButtonLabel;
+		}
+		var resetButtonLbl = 'Clear Form';
+		if (this.resetButtonLabel){
+			resetButtonLbl = this.resetButtonLabel;
+		}
+		
+		//set PostLbl
+		var txt = '<form id="pdbForm_'+this.pDBConnection.wallid+'">';
+		txt += '<input type="hidden" name="pdbId" value="">';
+		if(this.nickLabel != null){
+			txt += this.nickLabel + ' <input type="text" name="pdbNick" maxlength="50"><br>';
+		}
+		if(this.nick2Label != null){
+			txt += this.nick2Label + ' <input type="text" name="pdbNick2" maxlength="50"><br>';
+		}
+		if(this.postAreaLabel != null){
+			txt += this.postAreaLabel + '<br>';
+		}
+		txt +='<TEXTAREA cols="'+this.formWidth+'" rows="'+this.formHeight+'" name="pdbPost" ></TEXTAREA><br>';
+		txt +='<input type="button" name="pdbSubmitButton" value="'+ postButtonLbl +'" onclick=\"javascript:'+ this.variableName +'.submitFormValues('+this.variableName+'.pdbForm.pdbNick.value,'+this.variableName+'.pdbForm.pdbNick2.value,'+this.variableName+'.pdbForm.pdbPost.value,'+this.variableName+'.pdbForm.pdbId.value)\"/>';
+		txt +='<input type="button" name="reset" value="'+ resetButtonLbl +'" onclick=\"javascript:'+this.variableName+'.clearForm();"/>';
+		txt +='</form>';
+		this.formDiv.innerHTML = txt;
+		this.pdbForm = document.getElementById('pdbForm_'+this.pDBConnection.wallid);
+	}	
+
+	w.clearForm=function(){
+		this.pdbForm.pdbNick.value='';
+		this.pdbForm.pdbNick2.value='';
+		this.pdbForm.pdbPost.value='';
+		this.pdbForm.pdbId.value='';
+	}
+
+    w.editPost = function(id){
+		this.pdbForm.pdbNick.value=this.wall.getbyid(id).nick;
+		this.pdbForm.pdbNick2.value=this.wall.getbyid(id).nick2;
+		this.pdbForm.pdbPost.value=this.wall.getbyid(id).value;
+		this.pdbForm.pdbId.value=this.wall.getbyid(id).id;
+	}
+
+	w.submitFormValues = function(nick,nick2,post,id){
+		this.pDBConnection.post(this.variableName+'.submitFormValues_callback',w.replacesc(post),w.replacesc(nick),w.replacesc(nick2),id);
+	}
+
+	w.initWall();
+</script>
+</body>
+</html>
