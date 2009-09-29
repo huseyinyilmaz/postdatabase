@@ -1,0 +1,36 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+<script type="text/javascript">
+function NameValidator(){
+	nameList = new Array({% for wall in walls %}{%if not forloop.first %},{% endif %}'{{wall.name }}' {% endfor %});
+	function isUnique(name){
+		result = true
+		for(var i = 0 ; i<nameList.length;i++){
+			if (nameList[i] === name ){
+				result = false;
+				break;
+			}
+		}//for
+		return result;
+	}//function isUniqueName
+	this.isUnique = isUnique;
+}
+</script>
+<script type="text/javascript" src="/static/js/wall_validation.js">
+</head>
+<body>
+<script type="text/javascript"> 
+</script>
+<h1>Create a New Wall</h1>
+<a href="/settings">Return to settings page</a>
+<hr>
+<ul>
+	<li>Wall name must be unique. if you dont give it a unique name,your wall will not be created.</li>
+	<li>Only Letters and numbers are allowed on wall name.</li>
+	<li>Wall name can not be null</li>
+</ul>
+{% include "wallForm.html" %}
+
+</body>
+</html>
