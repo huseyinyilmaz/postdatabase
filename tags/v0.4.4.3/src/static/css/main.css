@@ -1,0 +1,27 @@
+body {		background-color: #FFFFFF;
+			font-family: "Helvetica,Arial,sans-serif"}
+h1 {		background-color: #E5ECF9;
+			border-top:	1px solid #3366CC;
+			text-align: center}
+a:link {	color: #222299;
+			text-decoration: none;
+			font-weight: bold}
+a:visited {	color: #000055;
+            text-decoration: none;
+            font-weight: bold}
+a:hover {	color: #9999FF;
+			text-decoration: underline;
+			font-weight: bold}
+a:active {	color: #FFFFFF;
+			text-decoration: none;
+			font-weight: bold}
+.error {	color: Red }
+
+div.validation_error { 	color: Red;
+						font-size: 70%}
+
+table.list {border: thin solid black;
+			border-collapse: separate;
+			border-spacing: 2px;
+			background-color: #E5ECF9}
+h3 {		text-align: center}
