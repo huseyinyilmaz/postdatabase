@@ -5,8 +5,8 @@
 	 * for.
 	 */
 	function PDBConnection(wallid){
-	    //this.domain = 'http://localhost:8080';
-	    this.domain = 'http://postdatabase.appspot.com';
+	    this.domain = 'http://localhost:9999';
+	    //this.domain = 'http://postdatabase.appspot.com';
 	    this.wallid = wallid;
 
 	    function getWallObject(callback,pagesize,pagenumber) {
