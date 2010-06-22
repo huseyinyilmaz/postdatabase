@@ -103,12 +103,13 @@
 										},//initWall
 							initWallCallback: function(initObject){
 											initObject.initFunction.call(initObject.caller);
-											function(){
+											var runInit = function(){
 												this.formDiv = this.pdbTopDiv;
 												this.postDiv = this.pdbBottomDiv;
 												this.printForm.call(this);
 												this.printPosts.call(this);
-											}.call(initObject.caller); 
+											};
+											runInit.apply(initObject.caller); 
 										},//initWallCallback
 							getDateString: function(date){
 											return '['+date.toLocaleDateString()+' - ' +date.toLocaleTimeString()+']';
