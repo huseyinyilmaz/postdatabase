@@ -1,5 +1,5 @@
 	//PDB is only global object that we have
-	var pdb2 = {
+	var postdatabase = {
 			serverDomain : "http://localhost:9999",
 			//domain : "http://postdatabase.appspot.com",
 			//initalizes walls
