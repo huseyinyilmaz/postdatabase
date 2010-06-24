@@ -79,25 +79,27 @@
 				var wall = {
 							pageNumber : 1,
 							pageSize : 20,
-							domObject: document.getElementById(divId),
+							domObject: null,
 							topDivId: null,
 							topDiv: null,
 							bottomDivId: null,
 							bottomDiv: null,
 							
 							initWall:	function(){
+											//locate domObject
+											this.domObject = document.getElementById(divId);
 											//Create Divs on the page
 											if(!this.topDivId){ 
 												this.topDivId = 'pdbTopDiv'+wallId;
 												this.topDiv = document.createElement('div');
-												this.topDiv.setAttribute('id',this.pdbTopDivId);
-												this.domObject.appendChild(this.pdbTopDiv);
+												this.topDiv.setAttribute('id',this.topDivId);
+												this.domObject.appendChild(this.topDiv);
 											}//if
 											if(!this.bottomDivId){ 
 												this.bottomDivId = 'pdbBottomDiv'+wallId;
 												this.bottomDiv = document.createElement('div');
-												this.bottomDiv.setAttribute('id',this.pdbBottomDivId);
-												this.domObject.appendChild(this.pdbBottomDiv);
+												this.bottomDiv.setAttribute('id',this.bottomDivId);
+												this.domObject.appendChild(this.bottomDiv);
 											}//if
 											connection.initWallObject('PDB.wallArray['+wallId+']' , 'initWallCallback');
 										},//initWall
@@ -245,7 +247,7 @@
 										}										
 												
 							}//wall			
-				wallArray.push(wall);
+				this.wallArray.push(wall);
 				wall.initWall();
 			}//init
 	}//PDB
