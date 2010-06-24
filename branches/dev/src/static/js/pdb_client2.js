@@ -1,16 +1,26 @@
 	//PDB is only global object that we have
-	var PDB = {
-			domain : "http://localhost:9999",
+	var pdb2 = {
+			serverDomain : "http://localhost:9999",
 			//domain : "http://postdatabase.appspot.com",
 			//initalizes walls
 			wallArray: [],
+			log:	function(message){
+						if(console){
+							console.log(message);
+						}
+					},//log
+			getWall:	function(wallId){
+				return wallArray[wallId];
+			},//getWall
 			init :function(divId,wallId){
 					var connection = {
 									bufferId: "pdbBuffer",
 									postBufferId:"pdbPostBuffer",
+									pdb:this,
 									getWallObject: 	function(callback,pagesize,pagenumber){
-			        									//prepare url
-														var url = this.domain + '/post/get?type=client&id='+ wallId + '&callback=' + callback;
+			        									this.pdb.log("connection.getWallObject - start");
+														//prepare url
+														var url = this.pdb.serverDomain + '/post/get?type=client&id='+ wallId + '&callback=' + callback;
 			        									if(pagesize){
 			        										url +='&pagesize=' + pagesize; 
 			        									}
@@ -31,8 +41,9 @@
 			        									document.getElementsByTagName('head')[0].appendChild(script);
 			    									},//getWallObject
 			    					initWallObject: function(callbackObject,callbackFunction) {
-			    										//prepare url
-			    										var url = this.domain + '/wall/init?id= '+ wallId + '&callbackobject=' + callbackObject + '&callbackfunction='+callbackFunction;
+			    										this.pdb.log("connection.initWallObject-start")
+														//prepare url
+			    										var url = this.pdb.serverDomain + '/wall/init?id='+ wallId + '&callbackobject=' + callbackObject + '&callbackfunction='+callbackFunction;
 			    	
 			    										var script_id = null;
 			    										var script = document.createElement('script');
@@ -101,7 +112,7 @@
 												this.bottomDiv.setAttribute('id',this.bottomDivId);
 												this.domObject.appendChild(this.bottomDiv);
 											}//if
-											connection.initWallObject('PDB.wallArray['+wallId+']' , 'initWallCallback');
+											connection.initWallObject('pdb.getWall('+wallId+')' , 'initWallCallback');
 										},//initWall
 							initWallCallback: function(initObject){
 											initObject.initFunction.call(initObject.caller);
