@@ -1,7 +1,13 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
-<script type="text/javascript" src ="/static/js/pdb_client.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+	<script type="text/javascript" src ="/static/js/postdatabase-client.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			postdatabase.init("tut",21016);
+			postdatabase.init("tut",23001);
+		}
+	</script>
 </head>
 <body>
 <h1>Main Tutorial Page</h1>
@@ -11,17 +17,8 @@
 </tr>
 </table>
 <hr>
-<script type="text/javascript">
-	pdbinit(21016);
-</script>
-
+<div id="tutorial"></div>
 <h3>Tell us what you think</h3>
-<script type="text/javascript">
-	pdbinit(23001);
-</script>
-
-
-
-
+<div id="post"></div>
 </body>
 </html>

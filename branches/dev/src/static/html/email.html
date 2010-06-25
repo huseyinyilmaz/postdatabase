@@ -1,7 +1,12 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
-<script type="text/javascript" src ="/static/js/pdb_client.js"></script>
+	<script type="text/javascript" src ="/static/js/postdatabase-client.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			postdatabase.init("email",18044);
+		}
+	</script>
 </head>
 <body>
 <h1>Email to Developer</h1>
@@ -12,8 +17,6 @@
 </table>
 <hr>
 Do you want to send me an email? Go ehead and use the form below.<br>
-<script type="text/javascript">
-	pdbinit(18044);
-</script>
+<div id="email"></div>
 </body>
 </html>
