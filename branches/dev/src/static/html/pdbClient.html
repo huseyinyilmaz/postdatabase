@@ -2,7 +2,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
-	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	
+	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/le-frog/jquery-ui.css" rel="stylesheet" />	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
 	<script type="text/javascript" src ="/static/js/postdatabase-client.js"></script>
@@ -15,9 +15,10 @@
 */
 
 		$(function(){
+			$("button").button();
 			postdatabase.init("sample",1);
 			//postdatabase.init("sample",21009);
-			$("button").button();
+			postdatabase.getWall(1).addReadyEventListener(function(){$("button.pdbButton").button();})
 			
 		});
 	</script>

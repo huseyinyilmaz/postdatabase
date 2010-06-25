@@ -1,5 +1,8 @@
-* {			/*background-color: #FFFFFF;
-			font-family: "Helvetica,Arial,sans-serif"*/
+* {			
+			font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+			/*font-size:1.1em;*/
+			font-weight:normal;
+
 }			
 
 div.main{
@@ -8,16 +11,24 @@ div.main{
 			width: 1000px;
 }
 
-h1 {		background-color: #E5ECF9;
-			border-top:	1px solid #3366CC;
+.pdbText,.componentBackGround{
+			/*background-color:87b863;*/
+			background-color:a1d47b;
+}
+
+h1 {		
+			/*background-color: #E5ECF9;
+			border-top:	1px solid #3366CC;*/
+			background-color: #a1d47b;
+			border-top:	1px solid #4e931c;
 			text-align: center}
-a:link {	color: #222299;
+a:link {	color: #40830f;
 			text-decoration: none;
 			font-weight: bold}
-a:visited {	color: #000055;
+a:visited {	color: #40830f;
             text-decoration: none;
             font-weight: bold}
-a:hover {	color: #9999FF;
+a:hover {	color: #a1d47b;
 			text-decoration: underline;
 			font-weight: bold}
 a:active {	color: #FFFFFF;
@@ -31,5 +42,5 @@ div.validation_error { 	color: Red;
 table.list {border: thin solid black;
 			border-collapse: separate;
 			border-spacing: 2px;
-			background-color: #E5ECF9}
+			background-color: #a1d47b}
 h3 {		text-align: center}

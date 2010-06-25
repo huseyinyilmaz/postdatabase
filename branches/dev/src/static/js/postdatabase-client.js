@@ -1,21 +1,46 @@
 	//PDB is only global object that we have
 	var postdatabase = {
+			//General Values
 			serverDomain : "http://localhost:9999",
 			//serverDomain : "http://postdatabase.appspot.com",
 			globalName:	"postdatabase",
-			//initalizes walls
-			wallArray: [],
 			log:	function(message){
 						if(console){
 							console.log(message);
 						}
 					},//log
+
+			//wall array
+			wallArray: [],
 			getWall:	function(wallId){
 				return this.wallArray[wallId];
 			},//getWall
+
+			/**
+			 * Initializes a new wall. Creates a new connection object and wall object. stores wall object in database
+			 * divId (String) = id of div that wall will be place into.
+			 * wallId(Number) = id of wall that will be used.
+			 * connectionObject(Connection object) = connection object that will be used to connect to server
+			 * 				if this value is not provided default connection object will be used.
+			 **/
 			init :function(divId,wallId,connectionObject){
+					//utility functions
+					//text that will semi colons will replace with
+					var semicolontext = "$pdb?replace!sc";
+					var replacesc = function(text){
+										return text.replace(/;/g,semicolontext);
+					};
+					var replaceBacksc =	function(text){
+										return text.replace(/\$pdb\?replace!sc/g,';');
+					};		
+
+					/**
+					 * Connection Object is an object that is used to comunicate with server.
+					 * connection object must have  three methods getWallObject,initWallObject,post
+					 */
 					var connection = null;
 					if(connectionObject != undefined)
+						//connection object is provided
 						connection = connectionObject;
 					else
 						connection = {
@@ -25,16 +50,16 @@
 									postBufferObject:null,
 									bufferCounter: 0,
 									pdb:this,
-									getWallObject: 	function(callback,pagesize,pagenumber){
+									//get posts from server
+									getPosts: 	function(callback,pagesize,pagenumber){
 			        									this.pdb.log("connection.getWallObject - start");
-														//prepare url
 														var url = this.pdb.serverDomain + '/post/get?type=client&id='+ wallId + '&callback=' + callback + '&request=' + this.bufferCounter;
 			        									if(pagesize){
 			        										url +='&pagesize=' + pagesize; 
-			        									}
+			        									};
 			        									if(pagenumber){
 			        										url +='&pagenumber=' + pagenumber; 
-			        									}
+			        									};
 			        									var script = document.createElement('script');
 			        									script.setAttribute('type', 'text/javascript');
 			        									script.setAttribute('src', url);
@@ -47,8 +72,9 @@
 			        									document.getElementsByTagName('head')[0].appendChild(script);
 														this.bufferObject = script;
 														this.pdb.log("connection.getWallObject - end");
-			    									},//getWallObject
-			    					initWallObject: function(callbackObject,callbackFunction) {
+			    									},//getPosts
+			    					//initializes wall
+			    					initWall: function(callbackObject,callbackFunction) {
 			    										this.pdb.log("connection.initWallObject-start")
 														//prepare url
 			    										var url = this.pdb.serverDomain + '/wall/init?id='+ wallId + '&callbackobject=' + callbackObject + '&callbackfunction='+callbackFunction + '&request=' + this.bufferCounter;
@@ -64,7 +90,8 @@
 			    										document.getElementsByTagName('head')[0].appendChild(script);
 			    										this.bufferObject = script;
 														this.pdb.log("connection.initWallObject-end");
-			    									},//initWallObject			    					
+			    									},//initWallObject
+			    					//posts a new value							    					
 			    					post:			function(callback,postValue,nick,nick2){
 			    										this.pdb.log("connection.post-start");
 														//prepare url
@@ -93,7 +120,8 @@
 			    										document.getElementsByTagName('head')[0].appendChild(script);
 			    										this.postBufferObject = script;
 														this.pdb.log("connection.post-end");
-			    									}//post
+			    									},//post
+
 								};//PDBConnection
 				//create wall object
 				var wall = {
@@ -105,6 +133,13 @@
 							bottomDivId: null,
 							bottomDiv: null,
 							pdb: this,
+							//ready event listner structure
+							readyEventArray:[],
+							addReadyEventListener:function(e){this.readyEventArray.push(e)},
+							fireReadyEvents:function(){
+								for(i in this.readyEventArray)
+									this.readyEventArray[i].apply(this);
+							},
 							initWall:	function(){
 											//locate domObject
 											this.domObject = document.getElementById(divId);
@@ -121,7 +156,7 @@
 												this.bottomDiv.setAttribute('id',this.bottomDivId);
 												this.domObject.appendChild(this.bottomDiv);
 											}//if
-											connection.initWallObject(this.pdb.globalName +'.getWall('+wallId+')' , 'initWallCallback');
+											connection.initWall(this.pdb.globalName +'.getWall('+wallId+')' , 'initWallCallback');
 										},//initWall
 							initWallPlaceComponents:	function(){
 															this.formDiv = this.topDiv;
@@ -131,7 +166,8 @@
 											},	
 							initWallCallback: function(initObject){
 											initObject.initFunction.call(initObject.caller);
-											this.initWallPlaceComponents.apply(initObject.caller); 
+											this.initWallPlaceComponents.apply(initObject.caller);
+											this.fireReadyEvents(); 
 										},//initWallCallback
 							getDateString: function(date){
 											return '['+date.toLocaleDateString()+' - ' +date.toLocaleTimeString()+']';
@@ -188,35 +224,27 @@
 												this.pageSize = pageSize;
 											}
 											this.postDiv.innerHTML = 'Loading...';
-											connection.getWallObject(this.pdb.globalName+'.getWall('+ wallId+').printPostsCallback',pageSize,pageNumber);
+											connection.getPosts(this.pdb.globalName+'.getWall('+ wallId+').printPostsCallback',pageSize,pageNumber);
 										}, //printPosts
 												
-							printPostsCallback: function(wall){
+							printPostsCallback: function(callBackObject){
 													this.pdb.log("wall.printPostsCallback-start");
 													var txt = '';
-													if(wall){
-														this.wall = wall;
-														this.wall.getbyid=function(id){
-														for (i = 0 ; i<postArray.length ; i++){
-															if(postArray[i].id==id){return postArray[i]};
-														};//for
-													}
-													var postArray = wall.posts;
-														txt += this.getPrePostString(wall);
-														for (i = 0 ; i<postArray.length ; i++){
-															txt += this.getPostString(postArray[i].id,this.replaceBacksc(postArray[i].nick),this.replaceBacksc(postArray[i].nick2),postArray[i].date,this.replaceBacksc(postArray[i].value),i);
-														};//for
-														txt +=this.getPostPostString(wall);
-														//txt = txt.replace(/\n/g,"<br>");
-													}//end if
-													//this.pdb.log("		wall.printPostsCallback-post content =" + txt);
+													var postArray = callBackObject.posts;
+													txt += this.getPrePostString(callBackObject);
+													for (i = 0 ; i<postArray.length ; i++){
+														txt += this.getPostString(postArray[i].id,replaceBacksc(postArray[i].nick),replaceBacksc(postArray[i].nick2),postArray[i].date,replaceBacksc(postArray[i].value),i);
+													};//for
+													txt +=this.getPostPostString(callBackObject);
 													this.postDiv.innerHTML = txt;
 													this.pdb.log("wall.printPostsCallback-end");
 												},//printPostListCallback											
 												
 							printForm:	function(){
 											//set postButtonLbl
-											var postButtonLbl = 'Post';
+											var postButtonLbl = 'Post';												
+							
+
 											if (this.postButtonLabel){
 												postButtonLbl = this.postButtonLabel;
 											}
@@ -226,39 +254,34 @@
 											}
 											//set PostLbl
 											var txt = '<form id="pdbForm_'+wallId+'">';
+											txt+="<table>";
 											if(this.nickLabel != null){
-												txt += this.nickLabel + ' <input type="text" name="pdbNick" maxlength="50"><br>';
+												txt += '<tr><td>'+this.nickLabel + '</td><td><input type="text" class="pdbText pdbNick" name="pdbNick" maxlength="50"></td></tr>';
 											}
 											if( this.nick2Label !=null){
-												txt += this.nick2Label + ' <input type="text" name="pdbNick2" maxlength="50"><br>';
+												txt += '<tr><td>'+this.nick2Label + '</td><td><input type="text" class="pdbText pdbNick2" name="pdbNick2" maxlength="50"></td></tr>';
 											}
+											txt+="</table>";
 											if(this.postAreaLabel != ''){
 												txt += this.postAreaLabel + '<br>';
 											}
-											txt +='<TEXTAREA cols="'+this.formWidth+'" rows="'+this.formHeight+'" name="pdbPost" ></TEXTAREA><br>';
-											txt +='<input type="button" name="pdbSubmitButton" value="'+ postButtonLbl +'" onclick=\"javascript:'+ this.pdb.globalName +'.getWall('+wallId+').submitFormValues(document.getElementById(\'pdbForm_'+wallId+'\').pdbNick.value,document.getElementById(\'pdbForm_'+wallId+'\').pdbNick2.value,document.getElementById(\'pdbForm_'+wallId+'\').pdbPost.value)\"/>';
-											txt +='<input type="button" name="reset" value="'+ resetButtonLbl +'" onclick=\"javascript:'+this.pdb.globalName+'.getWall('+wallId+').clearForm();"/>';
+											txt +='<TEXTAREA cols="'+this.formWidth+'" rows="'+this.formHeight+'" name="pdbPost" class="pdbText pdbTextArea" ></TEXTAREA><br>';
+											txt +='<button class="pdbButton pdbSubmitButton" onclick=\"javascript:'+ this.pdb.globalName +'.getWall('+wallId+').submitFormValues(document.getElementById(\'pdbForm_'+wallId+'\').pdbNick.value,document.getElementById(\'pdbForm_'+wallId+'\').pdbNick2.value,document.getElementById(\'pdbForm_'+wallId+'\').pdbPost.value)\">'+postButtonLbl+'</button>';
+											txt +='<button class="pdbButton pdbClearButton" onclick=\"javascript:'+this.pdb.globalName+'.getWall('+wallId+').clearForm();">'+resetButtonLbl+'</button>';
 											txt +='</form>';
 											this.formDiv.innerHTML = txt;
 											this.form = document.getElementById('pdbForm_'+wallId);
 										},//printForm						
-												
-							semicolontext : "$pdb?replace!sc",
-							replacesc: function(text){
-											return text.replace(/;/g,this.semicolontext);
-										},
-							replaceBacksc:	function(text){
-												return text.replace(/\$pdb\?replace!sc/g,';');
-											},		
+	
 							submitFormValues:	function(nick,nick2,post){
 													this.pdb.log("wall.submitFormValues-start");
 													var callback = this.pdb.globalName+'.getWall('+ wallId +').submitFormValues_callback';
 													this.pdb.log("		wall.submitFormValues-callback = " + callback);
-													var postValue = this.replacesc(post);
+													var postValue = replacesc(post);
 													this.pdb.log("		wall.submitFormValues-postValue = " + postValue);
-													var nickValue = this.replacesc(nick);
+													var nickValue = replacesc(nick);
 													this.pdb.log("		wall.submitFormValues-nickValue =" + nickValue);
-													var nick2Value = this.replacesc(nick2);
+													var nick2Value = replacesc(nick2);
 													this.pdb.log("		wall.submitFormValues-nick2Value =" + nick2Value);
 													connection.post(callback,postValue,nickValue,nick2Value);
 													this.pdb.log("wall.submitFormValues-end");
