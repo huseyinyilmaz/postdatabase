@@ -13,8 +13,10 @@
 			getWall:	function(wallId){
 				return this.wallArray[wallId];
 			},//getWall
-			init :function(divId,wallId){
-					var connection = {
+			init :function(divId,wallId,connectionObject){
+					var connection = connectionOBject;
+					if(connection == undefined)
+						connection = {
 									bufferId: "pdbBuffer",
 									postBufferId:"pdbPostBuffer",
 									bufferObject:null,

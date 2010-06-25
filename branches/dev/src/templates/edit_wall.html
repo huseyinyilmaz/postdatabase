@@ -2,7 +2,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="/static/css/main.css"/>
 <script type="text/javascript" src="/static/js/pdbAjax.js"></script>
-<script type="text/javascript" src="/static/js/pdb_client.js"></script>
+<script type="text/javascript" src="/static/js/pdb_client_old.js"></script>
 <script type="text/javascript">
 function NameValidator(){
 	nameList = new Array({% for w in walls %}{%if not forloop.first %},{% endif %}'{{w.name }}' {% endfor %});
