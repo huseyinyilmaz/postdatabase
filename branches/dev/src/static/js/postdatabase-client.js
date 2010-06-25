@@ -1,8 +1,8 @@
 	//PDB is only global object that we have
 	var postdatabase = {
-			serverDomain : "http://localhost:9999",
+			//serverDomain : "http://localhost:9999",
+			serverDomain : "http://postdatabase.appspot.com",
 			globalName:	"postdatabase",
-			//domain : "http://postdatabase.appspot.com",
 			//initalizes walls
 			wallArray: [],
 			log:	function(message){
@@ -14,8 +14,10 @@
 				return this.wallArray[wallId];
 			},//getWall
 			init :function(divId,wallId,connectionObject){
-					var connection = connectionOBject;
-					if(connection == undefined)
+					var connection = null;
+					if(connectionObject != undefined)
+						connection = connectionObject;
+					else
 						connection = {
 									bufferId: "pdbBuffer",
 									postBufferId:"pdbPostBuffer",
