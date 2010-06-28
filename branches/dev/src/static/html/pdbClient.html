@@ -14,11 +14,12 @@
 		}
 */
 		$(function(){
-			//$("button").button();
-			postdatabase.init("sample",1);
-			postdatabase.getWall(1).addReadyEventListener(function(){$("button.pdbButton").button();})
-			//postdatabase.init("sample",21009);
-			//postdatabase.getWall(21009).addReadyEventListener(function(){$("button.pdbButton").button();})
+			//enable logging
+			postdatabase.enableLog = true;
+			//postdatabase.init("sample",1);
+			//postdatabase.getWall(1).addReadyEventListener(function(){$("button.pdbButton").button();})
+			postdatabase.init("sample",21009);
+			postdatabase.getWall(21009).addReadyEventListener(function(){$("button.pdbButton").button();});
 		});
 	</script>
 </head>

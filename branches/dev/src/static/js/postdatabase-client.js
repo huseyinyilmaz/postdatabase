@@ -1,11 +1,12 @@
 	//PDB is only global object that we have
 	var postdatabase = {
 			//General Values
-			serverDomain : "http://localhost:9999",
-			//serverDomain : "http://postdatabase.appspot.com",
+			//serverDomain : "http://localhost:9999",
+			serverDomain : "http://postdatabase.appspot.com",
 			globalName:	"postdatabase",
 			//wall array
 			wallArray: [],
+			enableLog: false,
 			getWall:	function(wallId){
 				return this.wallArray[wallId];
 			},//getWall
@@ -20,9 +21,10 @@
 			init :function(divId,wallId,connectionObject){
 					//initialize logger if it is not already initialized
                     var logger = {
+						pdb:this,
 						loggedFunctionArray:[],
                         log: function(message){
-								if(window.console != undefined){
+								if(this.pdb.enableLog === true && window.console != undefined){
 									var prefix = "";
 									for (var i = 1; i < this.loggedFunctionArray.length; i++) 
 										prefix += "\t";
