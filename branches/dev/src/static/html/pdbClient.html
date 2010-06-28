@@ -13,13 +13,12 @@
 			//postdatabase.init("sample",21009);
 		}
 */
-
 		$(function(){
-			$("button").button();
+			//$("button").button();
 			postdatabase.init("sample",1);
-			//postdatabase.init("sample",21009);
 			postdatabase.getWall(1).addReadyEventListener(function(){$("button.pdbButton").button();})
-			
+			//postdatabase.init("sample",21009);
+			//postdatabase.getWall(21009).addReadyEventListener(function(){$("button.pdbButton").button();})
 		});
 	</script>
 </head>
@@ -35,7 +34,6 @@
 	<p>This is test bed for jsClient.In this implementation client side is complately java script. and provide api to manipulate posts. 
  Client side comunicates server with json objects.</p>
 <div id="sample"></div>
-<button>abc</button>
 </div>
 </body>
 </html>

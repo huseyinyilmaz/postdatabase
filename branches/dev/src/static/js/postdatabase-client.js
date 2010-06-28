@@ -4,12 +4,6 @@
 			serverDomain : "http://localhost:9999",
 			//serverDomain : "http://postdatabase.appspot.com",
 			globalName:	"postdatabase",
-			log:	function(message){
-						if(console){
-							console.log(message);
-						}
-					},//log
-
 			//wall array
 			wallArray: [],
 			getWall:	function(wallId){
@@ -24,6 +18,28 @@
 			 * 				if this value is not provided default connection object will be used.
 			 **/
 			init :function(divId,wallId,connectionObject){
+					//initialize logger if it is not already initialized
+                    var logger = {
+						loggedFunctionArray:[],
+                        log: function(message){
+								if(window.console != undefined){
+									var prefix = "";
+									for (var i = 1; i < this.loggedFunctionArray.length; i++) 
+										prefix += "\t";
+									console.log(prefix + "wall[" + wallId + "]" + " - " + this.loggedFunctionArray[this.loggedFunctionArray.length - 1] + " : ", message);
+								}
+                        },//log
+                        startLog: function(functionName){
+                            this.loggedFunctionArray.push(functionName);
+                            this.log("Start");
+                        },//startLog
+                        endLog: function(){
+                            //var loggedFunction = this.loggedFunctionArray[this.loggedFunctionArray.length-1];
+                            this.log("End");
+                            this.loggedFunctionArray.pop();
+                        },//startLog
+                    };//logger
+                    
 					//utility functions
 					//text that will semi colons will replace with
 					var semicolontext = "$pdb?replace!sc";
@@ -52,7 +68,7 @@
 									pdb:this,
 									//get posts from server
 									getPosts: 	function(callback,pagesize,pagenumber){
-			        									this.pdb.log("connection.getWallObject - start");
+			        									logger.startLog("connection.getPosts");
 														var url = this.pdb.serverDomain + '/post/get?type=client&id='+ wallId + '&callback=' + callback + '&request=' + this.bufferCounter;
 			        									if(pagesize){
 			        										url +='&pagesize=' + pagesize; 
@@ -71,14 +87,14 @@
 			        									//Insert <script> into DOM
 			        									document.getElementsByTagName('head')[0].appendChild(script);
 														this.bufferObject = script;
-														this.pdb.log("connection.getWallObject - end");
+														logger.endLog();
 			    									},//getPosts
 			    					//initializes wall
 			    					initWall: function(callbackObject,callbackFunction) {
-			    										this.pdb.log("connection.initWallObject-start")
+														logger.startLog("connection.initWall");
 														//prepare url
 			    										var url = this.pdb.serverDomain + '/wall/init?id='+ wallId + '&callbackobject=' + callbackObject + '&callbackfunction='+callbackFunction + '&request=' + this.bufferCounter;
-			    										this.pdb.log("		url = " + url);
+			    										logger.log("url = " + url);
 			    										var script = document.createElement('script');
 			    										script.setAttribute('type', 'text/javascript');
 			    										script.setAttribute('src', url);
@@ -89,11 +105,11 @@
 			    										//Insert <script> into DOM
 			    										document.getElementsByTagName('head')[0].appendChild(script);
 			    										this.bufferObject = script;
-														this.pdb.log("connection.initWallObject-end");
+														logger.endLog();
 			    									},//initWallObject
 			    					//posts a new value							    					
 			    					post:			function(callback,postValue,nick,nick2){
-			    										this.pdb.log("connection.post-start");
+			    										logger.startLog("connection.post");
 														//prepare url
 			    										var url = this.pdb.serverDomain + '/post/save?type=client&id=' + wallId+ '&request=' + this.bufferCounter;
 			    										if(callback){
@@ -108,7 +124,7 @@
 			    										if(nick2){
 			    											url += '&nick2=' + encodeURI(nick2); 
 			    										}
-			    										this.pdb.log("		connection.post-url = " + url);
+			    										logger.log("		connection.post-url = " + url);
 			    										var script = document.createElement('script');
 			    										script.setAttribute('type', 'text/javascript');
 			    										script.setAttribute('src', url);
@@ -119,7 +135,7 @@
 			    										// Insert <script> into DOM
 			    										document.getElementsByTagName('head')[0].appendChild(script);
 			    										this.postBufferObject = script;
-														this.pdb.log("connection.post-end");
+														logger.endLog();
 			    									},//post
 
 								};//PDBConnection
@@ -141,6 +157,7 @@
 									this.readyEventArray[i].apply(this);
 							},
 							initWall:	function(){
+											logger.startLog("wall.initWall");
 											//locate domObject
 											this.domObject = document.getElementById(divId);
 											//Create Divs on the page
@@ -157,6 +174,7 @@
 												this.domObject.appendChild(this.bottomDiv);
 											}//if
 											connection.initWall(this.pdb.globalName +'.getWall('+wallId+')' , 'initWallCallback');
+											logger.endLog();
 										},//initWall
 							initWallPlaceComponents:	function(){
 															this.formDiv = this.topDiv;
@@ -213,6 +231,7 @@
 												}, // getPostPostString
 							
 							printPosts: function(pageNumber,pageSize){
+											logger.startLog("wall.printPosts");
 											if(pageNumber == undefined){
 												var pageNumber = this.pageNumber;
 											}else{
@@ -225,10 +244,11 @@
 											}
 											this.postDiv.innerHTML = 'Loading...';
 											connection.getPosts(this.pdb.globalName+'.getWall('+ wallId+').printPostsCallback',pageSize,pageNumber);
+											logger.endLog();
 										}, //printPosts
 												
 							printPostsCallback: function(callBackObject){
-													this.pdb.log("wall.printPostsCallback-start");
+													logger.startLog("wall.printPostsCallback");
 													var txt = '';
 													var postArray = callBackObject.posts;
 													txt += this.getPrePostString(callBackObject);
@@ -237,7 +257,7 @@
 													};//for
 													txt +=this.getPostPostString(callBackObject);
 													this.postDiv.innerHTML = txt;
-													this.pdb.log("wall.printPostsCallback-end");
+													logger.endLog();
 												},//printPostListCallback											
 												
 							printForm:	function(){
@@ -274,20 +294,20 @@
 										},//printForm						
 	
 							submitFormValues:	function(nick,nick2,post){
-													this.pdb.log("wall.submitFormValues-start");
+													logger.startLog("wall.submitFormValues");
 													var callback = this.pdb.globalName+'.getWall('+ wallId +').submitFormValues_callback';
-													this.pdb.log("		wall.submitFormValues-callback = " + callback);
+													logger.log("callback = " + callback);
 													var postValue = replacesc(post);
-													this.pdb.log("		wall.submitFormValues-postValue = " + postValue);
+													logger.log("postValue = " + postValue);
 													var nickValue = replacesc(nick);
-													this.pdb.log("		wall.submitFormValues-nickValue =" + nickValue);
+													logger.log("nickValue =" + nickValue);
 													var nick2Value = replacesc(nick2);
-													this.pdb.log("		wall.submitFormValues-nick2Value =" + nick2Value);
+													logger.log("nick2Value =" + nick2Value);
 													connection.post(callback,postValue,nickValue,nick2Value);
-													this.pdb.log("wall.submitFormValues-end");
+													logger.endLog();
 												},
 							submitFormValues_callback:	function(result){
-															this.pdb.log("wall.submitFormValues_callback-start");
+															logger.startLog(wall.submitFormValues_callback);
 															if(!result){
 																alert('Server Error:Wall is read only!');
 																return;
@@ -296,14 +316,14 @@
 															if (this.wallStyle !=2){
 																this.printPosts(this.pageNumber,this.pageSize);
 															}
-															this.pdb.log("wall.submitFormValues_callback-end");
+															logger.endLog();
 														},//function submitFormValues_callback
 							clearForm:	function(){
-											this.pdb.log("wall.clearForm-start");
+											logger.startLog("wall.clearForm");
 											if(this.form.pdbNick){this.form.pdbNick.value='';};
 											if(this.form.pdbNick2){this.form.pdbNick2.value='';};
 											this.form.pdbPost.value='';
-											this.pdb.log("wall.clearForm-end");
+											logger.endLog();
 										}										
 												
 							}//wall			
