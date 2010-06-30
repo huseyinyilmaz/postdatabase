@@ -4,12 +4,39 @@
 		
 		var serverDomain = "http://localhost:9999";
 		//var serverDomain = "http://postdatabase.appspot.com";
+		
+		var wallModifier = {
+			getPageSize:function(){return originalWall.pageSize},
+			getNickLabel:function(){return originalWall.nickLabel},
+			getNick2Label:function(){return originalWall.nick2Label},
+			getPostAreaLabel:function(){return originalWall.postAreaLabel},
+			getPostButtonLabel:function(){return originalWall.postButtonLabel},
+			getResetButtonLabel:function(){return originalWall.resetButtonLabel},
+			getFormWidth:function(){return originalWall.formWidth},
+			getFormHeight:function(){return originalWall.formHeight},
+			getWallStyle:function(){return originalWall.wallStyle},
 
+			setPageSize:function(value){originalWall.pageSize = value;},
+			setNickLabel:function(value){originalWall.nickLabel = value;},
+			setNick2Label:function(value){originalWall.nick2Label = value;},
+			setPostAreaLabel:function(value){originalWall.postAreaLabel = value;},
+			setPostButtonLabel:function(value){originalWall.postButtonLabel = value;},
+			setResetButtonLabel:function(value){originalWall.resetButtonLabel = value;},
+			setFormWidth:function(value){originalWall.formWidth = value;},
+			setFormHeight:function(value){originalWall.formHeight = value;},
+			setWallStyle:function(value){originalWall.wallStyle = value;},
+			
+			completeInitilization:function(){originalWall.initWallCallback();}
+		};
+		
 		var wallArray = [];
-		return {
+		var mainObject = {
 			enableLog: false,
 			getWall: function(wallId){
-				return wallArray[wallId];
+				var originalWall = wallArray[wallId];
+				var wall = {};
+				wall.prototype = wallModifier;
+				return wall;
 			},//getWall
 			/**
 			 * Modifies the wall that has given wall id. This method finds the wall and sets its
@@ -34,10 +61,9 @@
 			init: function(divId, wallId, connectionObject){
 				//initialize logger if it is not already initialized
 				var logger = {
-					pdb: this,
 					loggedFunctionArray: [],
 					log: function(message){
-						if (this.pdb.enableLog === true && window.console != undefined) {
+						if (mainObject.enableLog === true && window.console != undefined) {
 							var prefix = "";
 							for (var i = 1; i < this.loggedFunctionArray.length; i++) 
 								prefix += "\t";
@@ -83,6 +109,7 @@
 						//get posts from server
 						getPosts: function(callback, pagesize, pagenumber){
 							logger.startLog("connection.getPosts");
+							this.bufferCounter++;
 							var url = serverDomain + '/post/get?type=client&id=' + wallId + '&callback=' + callback + '&request=' + this.bufferCounter;
 							if (pagesize) {
 								url += '&pagesize=' + pagesize;
@@ -93,7 +120,7 @@
 							var script = document.createElement('script');
 							script.setAttribute('type', 'text/javascript');
 							script.setAttribute('src', url);
-							script.setAttribute('id', this.bufferId + this.bufferCounter++);
+							script.setAttribute('id', this.bufferId + this.bufferCounter);
 							//remove old script if it is exist in dom
 							if (this.bufferObject) {
 								document.getElementsByTagName('head')[0].removeChild(this.bufferObject);
@@ -104,15 +131,16 @@
 							logger.endLog();
 						},//getPosts
 						//initializes wall
-						initWall: function(callbackObject, callbackFunction){
+						initWall: function(){
 							logger.startLog("connection.initWall");
+							this.bufferCounter++;
 							//prepare url
-							var url = serverDomain + '/wall/init?id=' + wallId + '&callbackobject=' + callbackObject + '&callbackfunction=' + callbackFunction + '&request=' + this.bufferCounter;
+							var url = serverDomain + '/wall/init?id=' + wallId + '&mainObject=' + callbackObject + '&request=' + this.bufferCounter;
 							logger.log("url = " + url);
 							var script = document.createElement('script');
 							script.setAttribute('type', 'text/javascript');
 							script.setAttribute('src', url);
-							script.setAttribute('id', this.bufferId + this.bufferCounter++);
+							script.setAttribute('id', this.bufferId + this.bufferCounter);
 							if (this.bufferObject) {
 								document.getElementsByTagName('head')[0].removeChild(this.bufferObject);
 							}
@@ -154,14 +182,24 @@
 					};//PDBConnection
 				//create wall object
 				var wall = {
-					pageNumber: 1,
-					pageSize: 20,
 					domObject: null,
 					topDivId: null,
 					topDiv: null,
 					bottomDivId: null,
 					bottomDiv: null,
 					pdb: this,
+
+					pageNumber: 1,
+					pageSize: 20,
+					postButtonLabel:null,
+					nickLabel:null,
+					nick2Label:null,
+					postAreaLabel:null,
+					postButtonLabel:null,
+					resetButtonLabel:null,
+					formWidth:null,
+					formHeight:null,
+					
 					//ready event listner structure
 					readyEventArray: [],
 					addReadyEventListener: function(e){
@@ -194,12 +232,12 @@
 					initWallPlaceComponents: function(){
 						this.formDiv = this.topDiv;
 						this.postDiv = this.bottomDiv;
-						this.printForm.call(this);
-						this.printPosts.call(this);
 					},
 					initWallCallback: function(initObject){
 						initObject.initFunction.call(initObject.caller);
 						this.initWallPlaceComponents.apply(initObject.caller);
+						this.printForm.call(this);
+						this.printPosts.call(this);
 						this.fireReadyEvents();
 					},//initWallCallback
 					getDateString: function(date){
@@ -345,5 +383,6 @@
 				wallArray[wallId] = wall;
 				wall.initWall();
 			}//init
-		};//PDB
+		};//mainObject
+		return mainObject;
 	}();//context of main object;
