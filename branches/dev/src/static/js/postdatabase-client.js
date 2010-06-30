@@ -5,39 +5,41 @@
 		var serverDomain = "http://localhost:9999";
 		//var serverDomain = "http://postdatabase.appspot.com";
 		
-		var wallModifier = {
-			getPageSize:function(){return originalWall.pageSize},
-			getNickLabel:function(){return originalWall.nickLabel},
-			getNick2Label:function(){return originalWall.nick2Label},
-			getPostAreaLabel:function(){return originalWall.postAreaLabel},
-			getPostButtonLabel:function(){return originalWall.postButtonLabel},
-			getResetButtonLabel:function(){return originalWall.resetButtonLabel},
-			getFormWidth:function(){return originalWall.formWidth},
-			getFormHeight:function(){return originalWall.formHeight},
-			getWallStyle:function(){return originalWall.wallStyle},
-
-			setPageSize:function(value){originalWall.pageSize = value;},
-			setNickLabel:function(value){originalWall.nickLabel = value;},
-			setNick2Label:function(value){originalWall.nick2Label = value;},
-			setPostAreaLabel:function(value){originalWall.postAreaLabel = value;},
-			setPostButtonLabel:function(value){originalWall.postButtonLabel = value;},
-			setResetButtonLabel:function(value){originalWall.resetButtonLabel = value;},
-			setFormWidth:function(value){originalWall.formWidth = value;},
-			setFormHeight:function(value){originalWall.formHeight = value;},
-			setWallStyle:function(value){originalWall.wallStyle = value;},
-			
-			_completeInitilization:function(){originalWall.initWallCallback();},
-			_reportServerError:function(message){originalWall.reportServerError(message);}
-		};
-		
 		var wallArray = [];
 		var mainObject = {
 			enableLog: false,
 			getWall: function(wallId){
 				var originalWall = wallArray[wallId];
-				var wall = {};
-				wall.prototype = wallModifier;
-				return wall;
+				return {
+						getPageSize:function(){return originalWall.pageSize},
+						getNickLabel:function(){return originalWall.nickLabel},
+						getNick2Label:function(){return originalWall.nick2Label},
+						getPostAreaLabel:function(){return originalWall.postAreaLabel},
+						getPostButtonLabel:function(){return originalWall.postButtonLabel},
+						getResetButtonLabel:function(){return originalWall.resetButtonLabel},
+						getFormWidth:function(){return originalWall.formWidth},
+						getFormHeight:function(){return originalWall.formHeight},
+						getWallStyle:function(){return originalWall.wallStyle},
+						getPostStyle:function(){return originalWall.postStyle},
+						getDateStyle:function(){return originalWall.dateStyle},
+
+						setPageSize:function(value){originalWall.pageSize = value;},
+						setNickLabel:function(value){originalWall.nickLabel = value;},
+						setNick2Label:function(value){originalWall.nick2Label = value;},
+						setPostAreaLabel:function(value){originalWall.postAreaLabel = value;},
+						setPostButtonLabel:function(value){originalWall.postButtonLabel = value;},
+						setResetButtonLabel:function(value){originalWall.resetButtonLabel = value;},
+						setFormWidth:function(value){originalWall.formWidth = value;},
+						setFormHeight:function(value){originalWall.formHeight = value;},
+						setWallStyle:function(value){originalWall.wallStyle = value;},
+						setPostStyle:function(value){originalWall.postStyle = value;},
+						setDateStyle:function(value){originalWall.dateStyle = value;},
+						
+						addReadyEventListener: function(e){originalWall.readyEventArray.push(e);},
+			
+						_completeInitilization:function(){originalWall.initWallCallback();},
+						_reportServerError:function(message){originalWall.reportServerError(message);}
+						};
 			},//getWall
 			/**
 			 * Modifies the wall that has given wall id. This method finds the wall and sets its
@@ -136,7 +138,7 @@
 							logger.startLog("connection.initWall");
 							this.bufferCounter++;
 							//prepare url
-							var url = serverDomain + '/wall/init?id=' + wallId + '&mainObject=' + callbackObject + '&request=' + this.bufferCounter;
+							var url = serverDomain + '/wall/init?id=' + wallId + '&mainObject=' + globalName + '&request=' + this.bufferCounter;
 							logger.log("url = " + url);
 							var script = document.createElement('script');
 							script.setAttribute('type', 'text/javascript');
@@ -188,8 +190,12 @@
 					topDiv: null,
 					bottomDivId: null,
 					bottomDiv: null,
-					pdb: this,
-
+					formDiv:null,
+					postDiv:null,
+					
+					wallStyle:1,
+					postStyle:1,
+					dateStyle:1,
 					pageNumber: 1,
 					pageSize: 20,
 					postButtonLabel:null,
@@ -206,13 +212,13 @@
 					},
 					//ready event listner structure
 					readyEventArray: [],
-					addReadyEventListener: function(e){
-						this.readyEventArray.push(e)
-					},
 					fireReadyEvents: function(){
 						for (i in this.readyEventArray) 
 							this.readyEventArray[i].apply(this);
 					},
+					
+					postArray:[],
+					
 					initWall: function(){
 						logger.startLog("wall.initWall");
 						//locate domObject
@@ -234,22 +240,160 @@
 						logger.endLog();
 					},//initWall
 					initWallPlaceComponents: function(){
-						this.formDiv = this.topDiv;
-						this.postDiv = this.bottomDiv;
+						switch(this.wallStyle){
+						case 1:
+							this.formDiv = this.topDiv;
+							this.postDiv = this.bottomDiv;
+							break;
+						case 2:
+							this.formDiv = this.topDiv;
+							break;
+						case 3:
+							this.postDiv = this.bottomDiv;
+							break;
+						case 4:
+							this.postDiv = this.topDiv;
+							this.formDiv = this.bottomDiv;
+							break;
+						}
 					},
-					initWallCallback: function(initObject){
-						initObject.initFunction.call(initObject.caller);
-						this.initWallPlaceComponents.apply(initObject.caller);
-						this.printForm.call(this);
-						this.printPosts.call(this);
+					initWallCallback: function(){
+						this.initWallPlaceComponents();
+						if(this.formDiv) this.printForm();
+						if(this.postDiv) this.printPosts();
 						this.fireReadyEvents();
 					},//initWallCallback
 					getDateString: function(date){
-						return '[' + date.toLocaleDateString() + ' - ' + date.toLocaleTimeString() + ']';
+						var dateTxt = null;
+						switch(this.dateString){
+						case 1:
+							dateTxt = '[' + date.toLocaleDateString() + ' - ' + date.toLocaleTimeString() + ']';
+							break;
+						case 2:
+							dateTxt = date.toLocaleDateString()+' - ' +date.toLocaleTimeString();
+							break;
+						case 3:
+							dateTxt = '['+date.toLocaleDateString()+']';
+							break;
+						case 4:
+							dateTxt = date.toLocaleDateString();
+							break;
+						case 5:
+							dateTxt = '['+date.toString+']';
+							break;
+						case 6:
+							dateTxt = date.toString();
+							break;
+						case 7:
+							var txt = '';
+							var minute = 1000 * 60;
+							var hour = minute * 60;
+							var day = hour * 24;
+							var year = day * 365;
+							var interval = new Date() - date;
+							var iMinute = 0;
+							var iHour = 0;
+							var iDay = 0;
+							var iYear = 0;
+							if (interval>year){
+								iYear = (interval / year).toFixed(0);
+								interval = interval - iYear*year;
+								txt += iYear.toString() + 'years ';
+							}
+							if (interval>day){
+								iDay = (interval / day).toFixed(0);
+								interval = interval - iDay*day;
+								txt += iDay.toString() + 'days ';
+							}
+							if (interval>hour){
+								iHour = (interval / hour).toFixed(0);
+								interval = interval - iHour*hour;
+								txt += iHour.toString() + 'hours ';
+							}
+							if(interval>minute){
+								iMinute = (interval / minute).toFixed(0);
+								interval = interval - iMinute*minute;
+								txt += iMinute.toString() + 'minutes '
+							}
+							if (txt == ''){
+								txt += 'Less then a minute ';
+							}
+							txt += 'ago';
+							dateTxt = '['+txt+']';
+							break;
+						case 8:
+							var txt = '';
+							var minute = 1000 * 60;
+							var hour = minute * 60;
+							var day = hour * 24;
+							var year = day * 365;
+							var interval = new Date() - date;
+							var iMinute = 0;
+							var iHour = 0;
+							var iDay = 0;
+							var iYear = 0;
+							if (interval>year){
+								iYear = (interval / year).toFixed(0);
+								interval = interval - iYear*year;
+								txt += iYear.toString() + 'years ';
+							}
+							if (interval>day){
+								iDay = (interval / day).toFixed(0);
+								interval = interval - iDay*day;
+								txt += iDay.toString() + 'days ';
+							}
+							if (interval>hour){
+								iHour = (interval / hour).toFixed(0);
+								interval = interval - iHour*hour;
+								txt += iHour.toString() + 'hours ';
+							}
+							if(interval>minute){
+								iMinute = (interval / minute).toFixed(0);
+								interval = interval - iMinute*minute;
+								txt += iMinute.toString() + 'minutes '
+							}
+							if (txt == ''){
+								txt += 'Less then a minute ';
+							}
+							txt += 'ago';
+							dateTxt = txt;
+							break;
+						}
+						return dateTxt;
 					},//getDateString
 					getPostString: function(id, nick, nick2, date, value, order){
-						var txt = '<tr><th> ' + nick + ' </th><th> ' + nick2 + ' </th><td style="font-size: 70%">' + this.getDateString(date) + '</td></tr>';
-						txt += '<tr></tr><tr><td colspan="3">' + value + '</td></tr><tr><td colspan="3"><hr></td></tr>';
+						var txt = null;
+						switch(this.postStyle){
+						case 1:
+							txt = '<tr><th> ' + nick + ' </th><th> ' + nick2 + ' </th><td style="font-size: 70%">' + this.getDateString(date) + '</td></tr>';
+							txt += '<tr></tr><tr><td colspan="3">' + value + '</td></tr><tr><td colspan="3"><hr></td></tr>';
+							break;
+						case 2:
+							txt = '<tr><td>'+ value +'</td></tr>';
+							break;
+						case 3:
+							txt = '<br><tr><td>'+ value +'</td></tr><tr><td><hr></td></tr>';
+							break;
+						case 4:
+							txt ='<tr><th align="center"> '+ nick +' </th></tr>';
+							txt += '<br><tr><td colspan="3">'+ value +'</td></tr><tr><td colspan="3"><hr></td></tr>';
+							break;
+						case 5:
+							txt ='<tr><table>';
+							txt += '<tr><td> '+ this.nickLabel +' : '+ nick +' </td></tr>';
+							txt += '<tr><td> '+ this.nick2Label +' : '+ nick2 +' </td></tr>';
+							txt += '<tr><td style="font-size: 70%">' + this.getDateString(date) +'</td></tr>';
+							txt += '<tr><td>'+ value +'</td></tr></table></tr><br><hr>';
+							break;
+						case 6:
+							txt ='<div align="right" class="pdbDate">' + this.getDateString(date) +'</div>';
+							txt += '<br>'+ value+'<br><hr>';
+							break;
+						case 7:
+							txt = '<br>'+ value+'<br>'; 
+							txt +='<div align="right" class="pdbDate">' + this.getDateString(date) +'</div><hr>';
+							break;
+						}
 						return txt;
 					},//getPostString
 					getPageList: function(wall){

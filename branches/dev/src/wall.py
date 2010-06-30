@@ -17,6 +17,7 @@ class InitWallHandler(webapp.RequestHandler):
         try:
             wallId_tx = cgi.escape(self.request.get('id'))
             mainObject= cgi.escape(self.request.get('mainObject'))
+            requestId= cgi.escape(self.request.get('request'))
             #callbackFunction = cgi.escape(self.request.get('callbackfunction'))
             if wallId_tx:
                 wallId = int(wallId_tx)
@@ -24,12 +25,12 @@ class InitWallHandler(webapp.RequestHandler):
                 raise Exception
 
             wall = Wall.get_by_id(wallId)
-
-            if not wall and not mainObject:
+            if not wall and not mainObject and not requestId:
                 raise Exception
             
             templateValues = {'wall'  : wall,
-                              'mainObject':mainObject}
+                              'mainObject':mainObject,
+                              'requestId':requestId}
             path = os.path.join(os.path.dirname(__file__),'templates','initWall.js')
             self.response.headers['Content-Type'] = 'text/javascript'
             self.response.out.write(template.render(path, templateValues))
