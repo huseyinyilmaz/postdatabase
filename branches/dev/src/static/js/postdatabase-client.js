@@ -26,7 +26,8 @@
 			setFormHeight:function(value){originalWall.formHeight = value;},
 			setWallStyle:function(value){originalWall.wallStyle = value;},
 			
-			completeInitilization:function(){originalWall.initWallCallback();}
+			_completeInitilization:function(){originalWall.initWallCallback();},
+			_reportServerError:function(message){originalWall.reportServerError(message);}
 		};
 		
 		var wallArray = [];
@@ -200,6 +201,9 @@
 					formWidth:null,
 					formHeight:null,
 					
+					reportServerError:function(message){
+						alert(message);
+					},
 					//ready event listner structure
 					readyEventArray: [],
 					addReadyEventListener: function(e){

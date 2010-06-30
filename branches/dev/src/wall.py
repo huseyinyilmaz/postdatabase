@@ -12,6 +12,7 @@ class InitWallHandler(webapp.RequestHandler):
         result = result.replace('\\','\\\\')
         result = result.replace('\'','\\\'')
         return result 
+    #handles cross domain initilizations
     def get(self):
         try:
             wallId_tx = cgi.escape(self.request.get('id'))
@@ -34,7 +35,8 @@ class InitWallHandler(webapp.RequestHandler):
             self.response.out.write(template.render(path, templateValues))
         except Exception:
             #TODO: implement a fail strategy
-            self.response.out.write(callbackObject+'.'+callbackFunction + '(None)')
+            self.response.out.write(mainObject+'._reportServerError("Wall initilization error");')
+    #handles ajax initilizations
     def post(self):
         try:
             wallId_tx = cgi.escape(self.request.get('id'))
