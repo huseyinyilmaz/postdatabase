@@ -46,10 +46,20 @@
 						setPostStyle:function(value){originalWall.postStyle = value;},
 						setDateStyle:function(value){originalWall.dateStyle = value;},
 						
-						
-						
 						addReadyEventListener: function(e){originalWall.readyEventArray.push(e);},
 			
+						clearPosts:	function(){originalWall.postsArray = [];},
+						addPost:function(post){
+							var originalPost = {
+								id: post.id,
+								nick:post.nick,
+								nick2:post.nick2,
+								date:post.date,
+								value:post.value
+							}
+							originalWall.postsArray.push(originalPost);
+						},
+						refreshPosts:	function(){originalWall.printPosts(originalWall.currentPage,originalWall.pageSize)},
 						_completeInitilization:function(){originalWall.initWallCallback();},
 						_completeGetPostRequest:function(){originalWall.printPostsCallback();},
 						_reportServerError:function(message){originalWall.reportServerError(message);}
@@ -115,13 +125,14 @@
 						getPosts: function(pagesize, pagenumber){
 							logger.startLog("connection.getPosts");
 							this.bufferCounter++;
-							var url = serverDomain + '/post/get?type=client&id=' + wallId + '&mainObject=' + callback + '&request=' + this.bufferCounter;
+							var url = serverDomain + '/post/get?type=client&id=' + wallId + '&mainObject=' + globalName + '&request=' + this.bufferCounter;
 							if (pagesize) {
 								url += '&pagesize=' + pagesize;
 							};
 							if (pagenumber) {
 								url += '&pagenumber=' + pagenumber;
 							};
+							logger.log('url = ' + url);
 							var script = document.createElement('script');
 							script.setAttribute('type', 'text/javascript');
 							script.setAttribute('src', url);
@@ -222,7 +233,7 @@
 							this.readyEventArray[i].apply(this);
 					},
 					
-					postArray:[],
+					postsArray:[],
 					
 					initWall: function(){
 						logger.startLog("wall.initWall");
@@ -270,7 +281,7 @@
 					},//initWallCallback
 					getDateString: function(date){
 						var dateTxt = null;
-						switch(this.dateString){
+						switch(this.dateStyle){
 						case 1:
 							dateTxt = '[' + date.toLocaleDateString() + ' - ' + date.toLocaleTimeString() + ']';
 							break;
@@ -401,25 +412,25 @@
 						}
 						return txt;
 					},//getPostString
-					getPageList: function(wall){
-						if (wall.pageNumber == 1) {
+					getPageList: function(){
+						if (this.pageCount == 1) {
 							return '';
 						}
-						var startPage = wall.currentPage - 5;
+						var startPage = this.currentPage - 5;
 						if (startPage < 1) {
 							startPage = 1;
 						}
 						else 
-							if (startPage + 9 > wall.pageNumber) {
-								startPage = wall.pageNumber - 9;
+							if (startPage + 9 > this.pageCount) {
+								startPage = this.pageCount - 9;
 								if (startPage < 1) {
 									startPage = 1;
 								}
 							}
 						var pageList = '';
-						for (var i = startPage; i < startPage + 10 && i <= wall.pageNumber; i++) {
-							if (wall.currentPage != i) {
-								pageList = pageList + '<a href="javascript:' + globalName + '.getWall(' + wallId + ').printPosts(' + i + ',' + wall.postsPerPage + ');"> ' + i + ' </a>';
+						for (var i = startPage; i < startPage + 10 && i <= this.pageCount; i++) {
+							if (this.currentPage != i) {
+								pageList = pageList + '<a href="javascript:(function(){var wall =' + globalName + '.getWall(' + wallId + ');wall.setCurrentPage('+i+');wall.refreshPosts();})();"> ' + i + ' </a>';
 							}
 							else {
 								pageList = pageList + i;
@@ -427,11 +438,11 @@
 						}
 						return pageList;
 					}, //getPageList										
-					getPrePostString: function(wall){
-						return '<table><tr><td>' + this.getPageList(wall) + '</td><tr>';
+					getPrePostString: function(){
+						return '<table><tr><td>' + this.getPageList() + '</td><tr>';
 					}, // getPrePostString
-					getPostPostString: function(wall){
-						return '<tr><td>' + this.getPageList(wall) + '</td><tr></table>';
+					getPostPostString: function(){
+						return '<tr><td>' + this.getPageList() + '</td><tr></table>';
 					}, // getPostPostString
 					printPosts: function(pageNumber, pageSize){
 						logger.startLog("wall.printPosts");
@@ -448,18 +459,17 @@
 							this.pageSize = pageSize;
 						}
 						this.postDiv.innerHTML = 'Loading...';
-						connection.getPosts(globalName + '.getWall(' + wallId + ').printPostsCallback', pageSize, pageNumber);
+						connection.getPosts(pageSize, pageNumber);
 						logger.endLog();
 					}, //printPosts
-					printPostsCallback: function(callBackObject){
+					printPostsCallback: function(){
 						logger.startLog("wall.printPostsCallback");
 						var txt = '';
-						var postArray = callBackObject.posts;
-						txt += this.getPrePostString(callBackObject);
-						for (i = 0; i < postArray.length; i++) {
-							txt += this.getPostString(postArray[i].id, replaceBacksc(postArray[i].nick), replaceBacksc(postArray[i].nick2), postArray[i].date, replaceBacksc(postArray[i].value), i);
+						txt += this.getPrePostString();
+						for (i = 0; i < this.postsArray.length; i++) {
+							txt += this.getPostString(this.postsArray[i].id, replaceBacksc(this.postsArray[i].nick), replaceBacksc(this.postsArray[i].nick2), this.postsArray[i].date, replaceBacksc(this.postsArray[i].value), i);
 						};//for
-						txt += this.getPostPostString(callBackObject);
+						txt += this.getPostPostString();
 						this.postDiv.innerHTML = txt;
 						logger.endLog();
 					},//printPostListCallback											

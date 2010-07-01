@@ -1,4 +1,4 @@
-function {{mainObject}}InitwallTemp_{{requestId}}(){
+(function(){
 	var wall = {{mainObject}}.getWall({{wall.key.id}});
 	wall.setPageSize({{wall.pageSize}});
 	wall.setNickLabel("{{wall.nickLabel}}");
@@ -12,6 +12,4 @@ function {{mainObject}}InitwallTemp_{{requestId}}(){
 	wall.setPostStyle({{wall.postStyle}});
 	wall.postStyle
 	wall._completeInitilization();
-};
-{{mainObject}}InitwallTemp_{{requestId}}();
-delete {{mainObject}}InitwallTemp_{{requestId}};
+})();
