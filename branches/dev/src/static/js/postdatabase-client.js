@@ -12,22 +12,22 @@
 				var originalWall = wallArray[wallId];
 				return {
 						//Getters
-						getPageSize:function(){return originalWall.pageSize},
-						getPostCount:function(){return originalWall.postCount},
-						getPageCount:function(){return originalWall.pageCount},
-						getCurrentPage:function(){return originalWall.currentPage},
+						getPageSize:function(){return originalWall.pageSize;},
+						getPostCount:function(){return originalWall.postCount;},
+						getPageCount:function(){return originalWall.pageCount;},
+						getCurrentPage:function(){return originalWall.currentPage;},
 						
-						getNickLabel:function(){return originalWall.nickLabel},
-						getNick2Label:function(){return originalWall.nick2Label},
-						getPostAreaLabel:function(){return originalWall.postAreaLabel},
-						getPostButtonLabel:function(){return originalWall.postButtonLabel},
-						getResetButtonLabel:function(){return originalWall.resetButtonLabel},
-						getFormWidth:function(){return originalWall.formWidth},
-						getFormHeight:function(){return originalWall.formHeight},
+						getNickLabel:function(){return originalWall.nickLabel;},
+						getNick2Label:function(){return originalWall.nick2Label;},
+						getPostAreaLabel:function(){return originalWall.postAreaLabel;},
+						getPostButtonLabel:function(){return originalWall.postButtonLabel;},
+						getResetButtonLabel:function(){return originalWall.resetButtonLabel;},
+						getFormWidth:function(){return originalWall.formWidth;},
+						getFormHeight:function(){return originalWall.formHeight;},
 						
-						getWallStyle:function(){return originalWall.wallStyle},
-						getPostStyle:function(){return originalWall.postStyle},
-						getDateStyle:function(){return originalWall.dateStyle},
+						getWallStyle:function(){return originalWall.wallStyle;},
+						getPostStyle:function(){return originalWall.postStyle;},
+						getDateStyle:function(){return originalWall.dateStyle;},
 						//Setters
 						setPageSize:function(value){originalWall.pageSize = value;},
 						setPostCount:function(value){originalWall.postCount = value;},
@@ -55,18 +55,6 @@
 						_reportServerError:function(message){originalWall.reportServerError(message);}
 						};
 			},//getWall
-			/**
-			 * Modifies the wall that has given wall id. This method finds the wall and sets its
-			 * information to given wall.
-			 * @param {Object} wallId
-			 * @param {Object} wall
-			 */
-			setWall:function(wallId,wall){
-				currentWall = this.getWall(wallId);
-				for(a in wall)
-					if(wall.hasOwnProperty(a)&&currentWall[a] != undefined)
-						currentWall[a] = wall[a];
-			},//wallId
 			
 			/**
 		 * Initializes a new wall. Creates a new connection object and wall object. stores wall object in database
