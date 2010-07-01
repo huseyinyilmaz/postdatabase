@@ -11,7 +11,12 @@
 			getWall: function(wallId){
 				var originalWall = wallArray[wallId];
 				return {
+						//Getters
 						getPageSize:function(){return originalWall.pageSize},
+						getPostCount:function(){return originalWall.postCount},
+						getPageCount:function(){return originalWall.pageCount},
+						getCurrentPage:function(){return originalWall.currentPage},
+						
 						getNickLabel:function(){return originalWall.nickLabel},
 						getNick2Label:function(){return originalWall.nick2Label},
 						getPostAreaLabel:function(){return originalWall.postAreaLabel},
@@ -19,11 +24,16 @@
 						getResetButtonLabel:function(){return originalWall.resetButtonLabel},
 						getFormWidth:function(){return originalWall.formWidth},
 						getFormHeight:function(){return originalWall.formHeight},
+						
 						getWallStyle:function(){return originalWall.wallStyle},
 						getPostStyle:function(){return originalWall.postStyle},
 						getDateStyle:function(){return originalWall.dateStyle},
-
+						//Setters
 						setPageSize:function(value){originalWall.pageSize = value;},
+						setPostCount:function(value){originalWall.postCount = value;},
+						setPageCount:function(value){originalWall.pageCount = value;},
+						setCurrentPage:function(value){originalWall.currentPage = value;},
+						
 						setNickLabel:function(value){originalWall.nickLabel = value;},
 						setNick2Label:function(value){originalWall.nick2Label = value;},
 						setPostAreaLabel:function(value){originalWall.postAreaLabel = value;},
@@ -31,13 +41,17 @@
 						setResetButtonLabel:function(value){originalWall.resetButtonLabel = value;},
 						setFormWidth:function(value){originalWall.formWidth = value;},
 						setFormHeight:function(value){originalWall.formHeight = value;},
+						
 						setWallStyle:function(value){originalWall.wallStyle = value;},
 						setPostStyle:function(value){originalWall.postStyle = value;},
 						setDateStyle:function(value){originalWall.dateStyle = value;},
 						
+						
+						
 						addReadyEventListener: function(e){originalWall.readyEventArray.push(e);},
 			
 						_completeInitilization:function(){originalWall.initWallCallback();},
+						_completeGetPostRequest:function(){originalWall.printPostsCallback();},
 						_reportServerError:function(message){originalWall.reportServerError(message);}
 						};
 			},//getWall
@@ -110,10 +124,10 @@
 						bufferCounter: 0,
 						pdb: this,
 						//get posts from server
-						getPosts: function(callback, pagesize, pagenumber){
+						getPosts: function(pagesize, pagenumber){
 							logger.startLog("connection.getPosts");
 							this.bufferCounter++;
-							var url = serverDomain + '/post/get?type=client&id=' + wallId + '&callback=' + callback + '&request=' + this.bufferCounter;
+							var url = serverDomain + '/post/get?type=client&id=' + wallId + '&mainObject=' + callback + '&request=' + this.bufferCounter;
 							if (pagesize) {
 								url += '&pagesize=' + pagesize;
 							};
@@ -193,11 +207,14 @@
 					formDiv:null,
 					postDiv:null,
 					
+					pageSize: 20,
+					postCount:0,
+					pageCount:0,
+					currentPage:0,
+					
 					wallStyle:1,
 					postStyle:1,
 					dateStyle:1,
-					pageNumber: 1,
-					pageSize: 20,
 					postButtonLabel:null,
 					nickLabel:null,
 					nick2Label:null,

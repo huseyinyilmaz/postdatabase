@@ -10,34 +10,7 @@ class ValueError(Exception):
     None;
 #----------------------------------------------------------
 class PostHandler(webapp.RequestHandler):
-    def post(self):
-        try:
-            wall_id_tx = cgi.escape(self.request.get('id'))
-            post_id_tx = cgi.escape(self.request.get('postid'))
-            post_value = self.request.get('post')
-            nick = cgi.escape(self.request.get('nick'))
-            nick2 = cgi.escape(self.request.get('nick2'))
-
-            if wall_id_tx:
-                wall_id = int(wall_id_tx)
-                wall = Wall.get_by_id(wall_id)
-            else:
-                raise ValueError
-            if not (wall and post_value):
-                raise ValueError
-            if post_id_tx:
-                post_id = int(post_id_tx)
-                post = Post.get_by_id(post_id)
-                post.value = post_value
-                post.nick = nick
-                post.nick2 = nick2
-            else:
-                post = Post(wall=wall,value=post_value,nick=nick,nick2=nick2)
-            post.put()
-            self.response.out.write('true')
-        except ValueError:
-            self.response.out.write('false')
-
+    #handles cross domain requests
     def get(self):
         try:
             self.response.headers['Content-Type'] = 'text/javascript; charset=utf-8'
@@ -68,9 +41,39 @@ class PostHandler(webapp.RequestHandler):
             self.response.out.write(callback + '(true);')
         except ValueError:
             self.response.out.write(callback + '(false);')
+    
+    def post(self):
+        try:
+            wall_id_tx = cgi.escape(self.request.get('id'))
+            post_id_tx = cgi.escape(self.request.get('postid'))
+            post_value = self.request.get('post')
+            nick = cgi.escape(self.request.get('nick'))
+            nick2 = cgi.escape(self.request.get('nick2'))
+
+            if wall_id_tx:
+                wall_id = int(wall_id_tx)
+                wall = Wall.get_by_id(wall_id)
+            else:
+                raise ValueError
+            if not (wall and post_value):
+                raise ValueError
+            if post_id_tx:
+                post_id = int(post_id_tx)
+                post = Post.get_by_id(post_id)
+                post.value = post_value
+                post.nick = nick
+                post.nick2 = nick2
+            else:
+                post = Post(wall=wall,value=post_value,nick=nick,nick2=nick2)
+            post.put()
+            self.response.out.write('true')
+        except ValueError:
+            self.response.out.write('false')
+
+
 #----------------------------------------------------------
 class pdbRequestHandler(webapp.RequestHandler):
-    all_post_size = 0
+    postCount = 0
     page_size = 0
     page_number = 0
     def replaceChars(self,text):
@@ -92,7 +95,7 @@ class pdbRequestHandler(webapp.RequestHandler):
             post_query.order('-order')
         else:
             post_query.order('order')
-        self.all_post_size = post_query.count()
+        self.postCount = post_query.count()
         posts = post_query.fetch(size,skip)
                     
         post_list = []
@@ -121,7 +124,9 @@ class pdbRequestHandler(webapp.RequestHandler):
             wall_id_tx = cgi.escape(self.request.get('id'))
             page_size_tx = cgi.escape(self.request.get('pagesize'))
             page_number_tx = cgi.escape(self.request.get('pagenumber'))
-            callback_tx = cgi.escape(self.request.get('callback'))
+            mainObject= cgi.escape(self.request.get('mainObject'))
+            requestId= cgi.escape(self.request.get('request'))
+
             if wall_id_tx:
                 wall_id = int(wall_id_tx)
                 wall = Wall.get_by_id(wall_id)
@@ -139,20 +144,21 @@ class pdbRequestHandler(webapp.RequestHandler):
 
             posts = self.getPosts(wall,int(page_number_tx),int(page_size_tx),wall.lastSavedFirst)
                         
-            all_page_number = self.all_post_size / self.page_size
-            if self.all_post_size % self.page_size:
-                all_page_number +=1
+            pageCount = self.postCount / self.page_size
+            if self.postCount % self.page_size:
+                pageCount +=1
             #if there is no pages which means there is no posts
             #total page number =1 
-            if not all_page_number:
-                all_page_number = 1
+            if not pageCount:
+                pageCount = 1
         
             #create template values send them to view model.
             template_values = {'posts' : posts,
                                'wall'  : wall,
-                               'callback':callback_tx,
-                               'postNumber': self.all_post_size,
-                               'pageNumber': all_page_number,
+                               'mainObject':mainObject,
+                               'requestId':requestId,
+                               'postCount': self.postCount,
+                               'pageCount': pageCount,
                                'postsPerPage': self.page_size,
                                'currentPage':self.page_number}
             path = os.path.join(os.path.dirname(__file__),'templates','crossdomain.js')
@@ -172,8 +178,8 @@ class pdbRequestHandler(webapp.RequestHandler):
                 raise ValueError
             posts = self.getPosts(wall,int(page_number_tx),int(page_size_tx),wall.lastSavedFirst)
                         
-            all_page_number = self.all_post_size / self.page_size
-            if self.all_post_size % self.page_size:
+            all_page_number = self.postCount / self.page_size
+            if self.postCount % self.page_size:
                 all_page_number +=1
             #if there is no pages which means there is no posts
             #total page number =1 
@@ -183,7 +189,7 @@ class pdbRequestHandler(webapp.RequestHandler):
             #create template values send them to view model.
             template_values = {'posts' : posts,
                                'wall'  : wall,
-                               'postNumber': self.all_post_size,
+                               'postNumber': self.postCount,
                                'pageNumber': all_page_number,
                                'postsPerPage': self.page_size,
                                'currentPage':self.page_number}
