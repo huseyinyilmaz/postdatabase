@@ -500,7 +500,7 @@
 							txt += this.postAreaLabel + '<br>';
 						}
 						txt += '<TEXTAREA cols="' + this.formWidth + '" rows="' + this.formHeight + '" id="pdbPost_' + wallId  + '" class="pdbText pdbTextArea" ></TEXTAREA><br>';
-						txt += '<button class="pdbButton pdbSubmitButton" id="pdbSubmitButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').submitFormValues(document.getElementById(\'pdbForm_' + wallId + '\').pdbNick.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbNick2.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbPost.value)\">' + postButtonLbl + '</button>';
+						txt += '<button class="pdbButton pdbSubmitButton" id="pdbSubmitButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').submitFormValues(document.getElementById(\'pdbNick_' + wallId + '\').value,document.getElementById(\'pdbNick2_' + wallId + '\').value,document.getElementById(\'pdbPost_' + wallId + '\').value)\">' + postButtonLbl + '</button>';
 						txt += '<button class="pdbButton pdbClearButton" id="pdbClearButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').clearForm();">' + resetButtonLbl + '</button>';
 						this.formDiv.innerHTML = txt;
 					},//printForm						

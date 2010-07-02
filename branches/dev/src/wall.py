@@ -35,7 +35,7 @@ class InitWallHandler(webapp.RequestHandler):
             self.response.headers['Content-Type'] = 'text/javascript'
             self.response.out.write(template.render(path, templateValues))
         except Exception:
-            #TODO: implement a fail strategy
+            #TODO: implement a fail strateg
             self.response.out.write(mainObject+'._reportServerError("Wall initilization error");')
     #handles ajax initilizations
     def post(self):
@@ -155,23 +155,20 @@ class EditWallHandler(webapp.RequestHandler):
         wall_id=int(cgi.escape(self.request.get('id')))
         #create template values send them to view model.
         wall = Wall.get_by_id(wall_id)
-        
+        """ 
         walls_query = Wall.all()
         walls_query.filter('owner = ',user)
         walls_query.filter('name != ',wall.name)
         walls_query.order('name')
         walls= walls_query.fetch(1000)
-
-        post_query = Post.all()
-        post_query.filter('wall =',wall)
-        post_number = post_query.count()
-        posts = post_query.fetch(1000)
+        """
+        postQuery = Post.all()
+        postQuery.filter('wall =',wall)
+        postCount = postQuery.count()
         templateValues = {'wall' : wall,
-                           'post_number' : post_number,
-                           'posts' : posts,
-                           'walls' : walls,
-                           'actionUrl':'/wall/edit'}
-        path = os.path.join(os.path.dirname(__file__),'templates','edit_wall.html')
+                          'postCount' : postCount,
+                          'url':'/wall/edit'}
+        path = os.path.join(os.path.dirname(__file__),'templates','wall.html')
         self.response.out.write(template.render(path, templateValues))
     def post(self):
         wallName=self.request.get('wallName')
