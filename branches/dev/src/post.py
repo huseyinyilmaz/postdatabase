@@ -19,7 +19,7 @@ class PostHandler(webapp.RequestHandler):
             post_value = self.request.get('post')
             nick = cgi.escape(self.request.get('nick'))
             nick2 = cgi.escape(self.request.get('nick2'))
-            callback = cgi.escape(self.request.get('callback'))
+            mainObject = cgi.escape(self.request.get('mainObject'))
             if wall_id_tx:
                 wall_id = int(wall_id_tx)
                 wall = Wall.get_by_id(wall_id)
@@ -38,9 +38,9 @@ class PostHandler(webapp.RequestHandler):
                 path = os.path.join(os.path.dirname(__file__),'templates','email.txt')
                 message.body = template.render(path, {'post' : post})
                 message.send()
-            self.response.out.write(callback + '(true);')
+            self.response.out.write(mainObject+'.getWall(' + wall_id_tx + ')._completeSubmitFormValues();')
         except ValueError:
-            self.response.out.write(callback + '(false);')
+            self.response.out.write(mainObject+'.getWall(' + wall_id_tx + ')._reportServerError("An Error is occured during saving your post")')
     
     def post(self):
         try:

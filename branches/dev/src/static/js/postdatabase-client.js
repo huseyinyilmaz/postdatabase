@@ -2,8 +2,8 @@
 	var postdatabase = function(){
 		var globalName = "postdatabase";
 		
-		var serverDomain = "http://localhost:9999";
-		//var serverDomain = "http://postdatabase.appspot.com";
+		//var serverDomain = "http://localhost:9999";
+		var serverDomain = "http://postdatabase.appspot.com";
 		
 		var wallArray = [];
 		var mainObject = {
@@ -60,8 +60,12 @@
 							originalWall.postsArray.push(originalPost);
 						},
 						refreshPosts:	function(){originalWall.printPosts(originalWall.currentPage,originalWall.pageSize)},
+						
+						submitFormValues:function(nick, nick2, post){originalWall.submitFormValues(nick,nick2,post);},
+						clearForm:function(){originalWall.clearForm();},
 						_completeInitilization:function(){originalWall.initWallCallback();},
 						_completeGetPostRequest:function(){originalWall.printPostsCallback();},
+						_completeSubmitFormValues:function(){originalWall.submitFormValues_callback();},
 						_reportServerError:function(message){originalWall.reportServerError(message);}
 						};
 			},//getWall
@@ -166,13 +170,10 @@
 							logger.endLog();
 						},//initWallObject
 						//posts a new value							    					
-						post: function(callback, postValue, nick, nick2){
+						post: function(nick, nick2,postValue){
 							logger.startLog("connection.post");
 							//prepare url
-							var url = serverDomain + '/post/save?type=client&id=' + wallId + '&request=' + this.bufferCounter;
-							if (callback) {
-								url += '&callback=' + callback;
-							}
+							var url = serverDomain + '/post/save?type=client&id=' + wallId +'&mainObject=' + globalName +'&request=' + this.bufferCounter;
 							if (postValue) {
 								url += '&post=' + encodeURI(postValue);
 							}
@@ -232,6 +233,7 @@
 						for (i in this.readyEventArray) 
 							this.readyEventArray[i].apply(this);
 					},
+					formReadyEventArray:[],
 					
 					postsArray:[],
 					
@@ -500,8 +502,8 @@
 						}
 						txt += '<TEXTAREA cols="' + this.formWidth + '" rows="' + this.formHeight + '" name="pdbPost" class="pdbText pdbTextArea" ></TEXTAREA><br>';
 						txt += '</form>';
-						txt += '<button class="pdbButton pdbSubmitButton" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').submitFormValues(document.getElementById(\'pdbForm_' + wallId + '\').pdbNick.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbNick2.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbPost.value)\">' + postButtonLbl + '</button>';
-						txt += '<button class="pdbButton pdbClearButton" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').clearForm();">' + resetButtonLbl + '</button>';
+						txt += '<button class="pdbButton pdbSubmitButton" id="pdbSubmitButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').submitFormValues(document.getElementById(\'pdbForm_' + wallId + '\').pdbNick.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbNick2.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbPost.value)\">' + postButtonLbl + '</button>';
+						txt += '<button class="pdbButton pdbClearButton" id="pdbClearButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').clearForm();">' + resetButtonLbl + '</button>';
 						this.formDiv.innerHTML = txt;
 						this.form = document.getElementById('pdbForm_' + wallId);
 					},//printForm						
@@ -515,15 +517,11 @@
 						logger.log("nickValue =" + nickValue);
 						var nick2Value = replacesc(nick2);
 						logger.log("nick2Value =" + nick2Value);
-						connection.post(callback, postValue, nickValue, nick2Value);
+						connection.post(nickValue, nick2Value,postValue);
 						logger.endLog();
 					},
-					submitFormValues_callback: function(result){
+					submitFormValues_callback: function(){
 						logger.startLog("wall.submitFormValues_callback");
-						if (!result) {
-							alert('Server Error:Wall is read only!');
-							return;
-						}
 						this.clearForm();
 						if (this.wallStyle != 2) {
 							this.printPosts(this.pageNumber, this.pageSize);
