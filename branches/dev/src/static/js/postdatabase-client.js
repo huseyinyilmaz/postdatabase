@@ -2,8 +2,8 @@
 	var postdatabase = function(){
 		var globalName = "postdatabase";
 		
-		//var serverDomain = "http://localhost:9999";
-		var serverDomain = "http://postdatabase.appspot.com";
+		var serverDomain = "http://localhost:9999";
+		//var serverDomain = "http://postdatabase.appspot.com";
 		
 		var wallArray = [];
 		var mainObject = {
@@ -488,29 +488,24 @@
 							resetButtonLbl = this.resetButtonLabel;
 						}
 						//set PostLbl
-						var txt = '<form id="pdbForm_' + wallId + '">';
-						txt += "<table>";
+						var txt = "<table>";
 						if (this.nickLabel != null) {
-							txt += '<tr><td>' + this.nickLabel + '</td><td><input type="text" class="pdbText pdbNick" name="pdbNick" maxlength="50"></td></tr>';
+							txt += '<tr><td>' + this.nickLabel + '</td><td><input type="text" class="pdbText pdbNick" id="pdbNick_' + wallId + '" maxlength="50"></td></tr>';
 						}
 						if (this.nick2Label != null) {
-							txt += '<tr><td>' + this.nick2Label + '</td><td><input type="text" class="pdbText pdbNick2" name="pdbNick2" maxlength="50"></td></tr>';
+							txt += '<tr><td>' + this.nick2Label + '</td><td><input type="text" class="pdbText pdbNick2" id="pdbNick2_' + wallId + '" maxlength="50"></td></tr>';
 						}
 						txt += "</table>";
 						if (this.postAreaLabel != '') {
 							txt += this.postAreaLabel + '<br>';
 						}
-						txt += '<TEXTAREA cols="' + this.formWidth + '" rows="' + this.formHeight + '" name="pdbPost" class="pdbText pdbTextArea" ></TEXTAREA><br>';
-						txt += '</form>';
+						txt += '<TEXTAREA cols="' + this.formWidth + '" rows="' + this.formHeight + '" id="pdbPost_' + wallId  + '" class="pdbText pdbTextArea" ></TEXTAREA><br>';
 						txt += '<button class="pdbButton pdbSubmitButton" id="pdbSubmitButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').submitFormValues(document.getElementById(\'pdbForm_' + wallId + '\').pdbNick.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbNick2.value,document.getElementById(\'pdbForm_' + wallId + '\').pdbPost.value)\">' + postButtonLbl + '</button>';
 						txt += '<button class="pdbButton pdbClearButton" id="pdbClearButton'+ wallId +'" onclick=\"javascript:' + globalName + '.getWall(' + wallId + ').clearForm();">' + resetButtonLbl + '</button>';
 						this.formDiv.innerHTML = txt;
-						this.form = document.getElementById('pdbForm_' + wallId);
 					},//printForm						
 					submitFormValues: function(nick, nick2, post){
 						logger.startLog("wall.submitFormValues");
-						var callback = globalName + '.getWall(' + wallId + ').submitFormValues_callback';
-						logger.log("callback = " + callback);
 						var postValue = replacesc(post);
 						logger.log("postValue = " + postValue);
 						var nickValue = replacesc(nick);
@@ -530,13 +525,16 @@
 					},//function submitFormValues_callback
 					clearForm: function(){
 						logger.startLog("wall.clearForm");
-						if (this.form.pdbNick) {
-							this.form.pdbNick.value = '';
+						var pdbNick = document.getElementById('pdbNick_'+wallId);
+						if (pdbNick) {
+							pdbNick.value = '';
 						};
-						if (this.form.pdbNick2) {
-							this.form.pdbNick2.value = '';
+						var pdbNick2 = document.getElementById('pdbNick2_'+wallId);
+						if (pdbNick2) {
+							pdbNick2.value = '';
 						};
-						this.form.pdbPost.value = '';
+						var pdbPost = document.getElementById('pdbPost_'+wallId);
+						pdbPost.value = '';
 						logger.endLog();
 					}
 					
