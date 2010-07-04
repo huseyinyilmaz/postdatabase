@@ -192,9 +192,9 @@ class EditWallHandler(webapp.RequestHandler):
         wall = Wall.get_by_id(wall_id)
         wall.name = wallName
         wall.pageSize = pageSize
-        wall.allowEntry = allowEntry =='True'
-        wall.allowRead = allowRead =='True'
-        wall.allowHtml = allowHtml =='True'
+        wall.allowEntry = allowEntry =='true'
+        wall.allowRead = allowRead =='true'
+        wall.allowHtml = allowHtml =='true'
         wall.wallStyle = wallStyle
         wall.postStyle = postStyle
         wall.dateStyle = dateStyle
@@ -203,10 +203,10 @@ class EditWallHandler(webapp.RequestHandler):
         wall.postAreaLabel = postAreaLabel
         wall.postButtonLabel = postButtonLabel
         wall.resetButtonLabel = resetButtonLabel
-        wall.lastSavedFirst = lastSavedFirst =='True'
+        wall.lastSavedFirst = lastSavedFirst =='true'
         wall.formWidth = formWidth
         wall.formHeight = formHeight
-        wall.emailOnSubmit = emailOnSubmit =='True'
+        wall.emailOnSubmit = emailOnSubmit =='true'
         wall.put()
         self.redirect('/settings')
 

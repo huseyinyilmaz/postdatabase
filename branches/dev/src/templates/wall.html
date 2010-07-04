@@ -95,72 +95,74 @@ var postCount= {{postCount}};
 	<!------------General tabs------------->
 	<div id="generalStyle">
 		<table class="ui-widget ui-widget-content">
-		<tr><td><input type="radio" name="wallStyle" value="1" {% ifequal wall.wallStyle 1%}checked="checked"{%endifequal%} {%if not wall.wallstyle%}checked="checked"{%endif%}/>Standart Post(first an entry form and than a post list)</td></tr>
-		<tr><td><input type="radio" name="wallStyle" value="2" {% ifequal wall.wallStyle 2%}checked="checked"{%endifequal%}/>Only an entry form(you can use this instead of giving your email address)</td></tr>
-		<tr><td><input type="radio" name="wallStyle" value="3" {% ifequal wall.wallStyle 3%}checked="checked"{%endifequal%}/>Blog Style(only post data, no entry form.If you choose this. please also close entries from outside.)</td></tr>
-		<tr><td><input type="radio" name="wallStyle" value="4" {% ifequal wall.wallStyle 4%}checked="checked"{%endifequal%}/>Standart Post(Reversed version - first post list and then  an entry form)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="1"/>Standart Post(first an entry form and than a post list)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="2"/>Only an entry form(you can use this instead of giving your email address)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="3"/>Blog Style(only post data, no entry form.If you choose this. please also close entries from outside.)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="4"/>Standart Post(Reversed version - first post list and then  an entry form)</td></tr>
 		</table>
 	</div>
 	<div id="formAttributes">
 		<table class="ui-widget ui-widget-content">
 		<tr>
 		 	<td>Nick Label</td>
-			<td><input type="text" name="nickLabel" maxlength="50" value="{% if wall.nickLabel%}{{ wall.nickLabel }}{%else%}Name{%endif%}"></td>
+			<td><input type="text" id="nickLabel" maxlength="50"></td>
 			<td><div id="nickLabelAlert" class="validation_error"></div></td>
 		</tr>
 		<tr>
 		 	<td>Nick2 Label</td>
-			<td><input type="text" name="nick2Label" maxlength="50" value="{% if wall.nick2Label%}{{ wall.nick2Label }}{%else%}Last Name{%endif%}"></td>
+			<td><input type="text" id="nick2Label" maxlength="50"></td>
 			<td><div id="nick2LabelAlert" class="validation_error"></div></td>
 		</tr>
 		<tr>
 		 	<td>Post Area Label</td>
-			<td><input type="text" name="postAreaLabel" maxlength="50" value="{% if wall.postAreaLabel%}{{ wall.postAreaLabel }}{%else%}Post{%endif%}"></td>
+			<td><input type="text" id="postAreaLabel" maxlength="50"></td>
 			<td><div id="postAreaLabelAlert" class="validation_error"></div></td>
 		</tr>
 		<tr>
 		 	<td>Post Button Label</td>
-			<td><input type="text" name="postButtonLabel" maxlength="50" value="{% if wall.postButtonLabel%}{{ wall.postButtonLabel }}{%else%}Post{%endif%}"></td>
+			<td><input type="text" id="postButtonLabel" maxlength="50"></td>
 			<td><div id="postButtonLabelAlert" class="validation_error"></div></td>
 		</tr>
 		<tr>
 		 	<td>Reset Button Label</td>
-			<td><input type="text" name="resetButtonLabel" maxlength="50" value="{% if wall.resetButtonLabel%}{{ wall.resetButtonLabel }}{%else%}Clear Form{%endif%}"></td>
+			<td><input type="text" id="resetButtonLabel" maxlength="50"></td>
 			<td><div id="resetButtonLabelAlert" class="validation_error"></div></td>
 		</tr>
 		<tr>
 		 	<td>Post Area Height</td>
-			<td><input type="text" name="formHeight" maxlength="50" value="{% if wall.formHeight%}{{ wall.formHeight }}{%else%}5{%endif%}"></td>
+			<td><input type="text" id="formHeight" maxlength="50"></td>
 			<td><div id="formHeightAlert" class="validation_error"></div></td>
 		</tr>
 		<tr>
 		 	<td>Post Area Width</td>
-			<td><input type="text" name="formWidth" maxlength="50" value="{% if wall.formWidth%}{{ wall.formWidth }}{%else%}100{%endif%}"></td>
+			<td><input type="text" id="formWidth" maxlength="50"></td>
 			<td><div id="formWidthAlert" class="validation_error"></div></td>
 		</tr>
 		</table>
 	</div>
+	<!--------Post Style-------------->
 	<div id="postStyle">
 				<table class="ui-widget ui-widget-content">
-				<tr><td><input type="radio" name="postStyle" value="1" {% ifequal wall.postStyle 1%}checked="checked"{%endifequal%} {%if not wall.postStyle%}checked="checked"{%endif%}/>Standart Post: nick nick2 [date] as header and post in the bottom</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="2" {% ifequal wall.postStyle 2%}checked="checked"{%endifequal%}/>No Header Post: Prints only post value and no line after the post</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="3" {% ifequal wall.postStyle 3%}checked="checked"{%endifequal%}/>NoHeader Post with horizontal line: Prints post and a horizontal line after it</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="4" {% ifequal wall.postStyle 4%}checked="checked"{%endifequal%}/>Titled Post: Uses nick as title</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="5" {% ifequal wall.postStyle 5%}checked="checked"{%endifequal%}/>Indipendent Post: Every Form is in its on table</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="6" {% ifequal wall.postStyle 6%}checked="checked"{%endifequal%}/>Dated Post:date on top right corner</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="7" {% ifequal wall.postStyle 7%}checked="checked"{%endifequal%}/>Dated Post(footnote): date on bottom right corner.</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="1"/>Standart Post: nick nick2 [date] as header and post in the bottom</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="2"/>No Header Post: Prints only post value and no line after the post</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="3"/>NoHeader Post with horizontal line: Prints post and a horizontal line after it</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="4"/>Titled Post: Uses nick as title</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="5"/>Indipendent Post: Every Form is in its on table</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="6"/>Dated Post:date on top right corner</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="7"/>Dated Post(footnote): date on bottom right corner.</td></tr>
 				</table>
 	</div>
+	<!--------Date Style-------------->
 	<div id="dateStyle">
 				<table class="ui-widget ui-widget-content">
-				<tr><td><input type="radio" name="dateStyle" value="1" {% ifequal wall.dateStyle 1%}checked="checked"{%endifequal%} {%if not wall.dateStyle%}checked="checked"{%endif%}/>Date Time: [Wednesday, June 03, 2009 - 9:29:54 AM] </td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="2" {% ifequal wall.dateStyle 2%}checked="checked"{%endifequal%}/>Date Time (No paranthesis): Wednesday, June 03, 2009 - 9:29:54 AM</td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="3" {% ifequal wall.dateStyle 3%}checked="checked"{%endifequal%}/>Date: [Wednesday, June 03, 2009]</td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="4" {% ifequal wall.dateStyle 4%}checked="checked"{%endifequal%}/>Date (No paranthesis): Wednesday, June 03, 2009</td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="5" {% ifequal wall.dateStyle 5%}checked="checked"{%endifequal%}/>Long Date: [Wed Jun 03 2009 15:53:51 GMT+0300 (GTB Daylight Time)]</td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="6" {% ifequal wall.dateStyle 6%}checked="checked"{%endifequal%}/>Long Date: (No paranthesis): Wed Jun 03 2009 15:53:51 GMT+0300 (GTB Daylight Time)</td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="7" {% ifequal wall.dateStyle 7%}checked="checked"{%endifequal%}/>Interval: [3 days ago]</td></tr>
-				<tr><td><input type="radio" name="dateStyle" value="8" {% ifequal wall.dateStyle 8%}checked="checked"{%endifequal%}/>Interval (No paranthesis): 3 days ago</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="1"/>Date Time: [Wednesday, June 03, 2009 - 9:29:54 AM] </td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="2"/>Date Time (No paranthesis): Wednesday, June 03, 2009 - 9:29:54 AM</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="3"/>Date: [Wednesday, June 03, 2009]</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="4"/>Date (No paranthesis): Wednesday, June 03, 2009</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="5"/>Long Date: [Wed Jun 03 2009 15:53:51 GMT+0300 (GTB Daylight Time)]</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="6"/>Long Date: (No paranthesis): Wed Jun 03 2009 15:53:51 GMT+0300 (GTB Daylight Time)</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="7"/>Interval: [3 days ago]</td></tr>
+				<tr><td><input type="radio" name="dateStyle" value="8"/>Interval (No paranthesis): 3 days ago</td></tr>
 				</table>
 	</div>
 </div>
