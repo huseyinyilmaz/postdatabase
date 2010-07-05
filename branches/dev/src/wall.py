@@ -1,3 +1,4 @@
+import logging
 import cgi
 from google.appengine.api import users
 import wsgiref.handlers
@@ -171,7 +172,8 @@ class EditWallHandler(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__),'templates','wall.html')
         self.response.out.write(template.render(path, templateValues))
     def post(self):
-        wallName=self.request.get('wallName')
+        logging.info('EditWallHandler.post')
+        wallName=self.request.get('name')
         pageSize=int(self.request.get('pageSize'))
         wall_id=int(self.request.get('id'))
         allowEntry =self.request.get('allowEntry')
@@ -189,6 +191,7 @@ class EditWallHandler(webapp.RequestHandler):
         formWidth = int(self.request.get('formWidth'))
         formHeight = int(self.request.get('formHeight'))
         emailOnSubmit=self.request.get('emailOnSubmit')
+        
         wall = Wall.get_by_id(wall_id)
         wall.name = wallName
         wall.pageSize = pageSize
@@ -208,7 +211,10 @@ class EditWallHandler(webapp.RequestHandler):
         wall.formHeight = formHeight
         wall.emailOnSubmit = emailOnSubmit =='true'
         wall.put()
-        self.redirect('/settings')
+
+        #self.redirect('/settings')
+        self.response.headers['Content-Type'] = 'text/javascript'
+        self.response.out.write('controller.requestOK();')        
 
 class DeleteWallHandler(webapp.RequestHandler):
     def get(self):
