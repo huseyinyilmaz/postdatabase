@@ -1,0 +1,33 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+</head>
+<body>
+<div class="main">
+<h1>Application administration</h1>
+
+<table>
+<tr>
+	<td><a href="/">main page</a></td>	<td> - </td>
+	<td><a href="{{logout_url}}">logout</a></td> <td> - </td>
+	<td>Current User : {{user_email}}</td>
+</tr>
+</table>
+<p>
+This is admin page
+</p>
+
+<table class="list" border="1">
+<tr>
+<th colspan="2">Wall List</th>
+</tr><td>User email</td><td>Wall name</td></tr>
+{% for wall in walls %}
+<tr>
+<td>{{wall.owner.email}}</td>
+<td>{{ wall.name }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</body>
+</html>
