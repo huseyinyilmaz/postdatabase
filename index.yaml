@@ -10,20 +10,17 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Unused in query history -- copied from input.
 - kind: Post
   properties:
   - name: wall
   - name: order
 
-# Used 2 times in query history.
 - kind: Post
   properties:
   - name: wall
   - name: order
     direction: desc
 
-# Used 3 times in query history.
 - kind: Wall
   properties:
   - name: owner

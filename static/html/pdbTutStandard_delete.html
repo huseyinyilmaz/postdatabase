@@ -2,7 +2,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
-	<script type="text/javascript" src ="/static/js/pdb_client.js"></script>
+	<script type="text/javascript" src ="/static/js/postdatabase-client.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			postdatabase.init("tut",21016);
+		}
+	</script>
+
 </head>
 <body>
 <h1>How to make a standard wall</h1>
@@ -12,8 +18,6 @@
 </tr>
 </table>
 <hr>
-<script type="text/javascript">
-	pdbinit(7);
-</script>
+<div id="tut"></div>
 </body>
 </html>

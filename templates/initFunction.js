@@ -10,22 +10,22 @@ this.formHeight="{{wall.formHeight}}";
 this.wallStyle={{wall.wallStyle}};
 
 {%ifequal wall.wallStyle 2%}
-this.runInit =function(){
-			this.formDiv = this.pdbTopDiv;
+this.initWallPlaceComponents =function(){
+			this.formDiv = this.topDiv;
 			this.printForm.call(this);
 		}
 {%endifequal%}
 {%ifequal wall.wallStyle 3%}
-this.runInit =function(){
-			this.postDiv = this.pdbBottomDiv;
+this.initWallPlaceComponents =function(){
+			this.postDiv = this.bottomDiv;
 			this.printPosts.call(this);
 		}
 {%endifequal%}
 {%ifequal wall.wallStyle 4%}
-this.runInit =function(){
-			this.postDiv = this.pdbTopDiv;
+this.initWallPlaceComponents =function(){
+			this.postDiv = this.topDiv;
 			this.printPosts.call(this);
-			this.formDiv = this.pdbBottomDiv;
+			this.formDiv = this.bottomDiv;
 			this.printForm.call(this);
 		}
 {%endifequal%}
@@ -66,7 +66,13 @@ this.getPostString = function(id,nick,nick2,date,value,order){
 	return txt;
 }
 {%endifequal%}
-
+{%ifequal wall.postStyle 7%}
+this.getPostString = function(id,nick,nick2,date,value,order){
+	var txt = '<br>'+ value+'<br>'; 
+	txt +='<div align="right" class="pdbDate">' + this.getDateString(date) +'</div><hr>';
+	return txt;
+}
+{%endifequal%}
 
 
 
