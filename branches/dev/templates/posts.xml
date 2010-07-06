@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<wall>{% for post in posts %}
-	<post>
-		<nick>{{ post.nick }}</nick>
-		<nick2>{{ post.nick2 }}</nick2>
-		<date>{{ post.date|date:"Y/m/d H:i:s \G\M\T O"}}</date>
-		<value>{{ post.value }}</value>
-	</post>
-{% endfor %}</wall>
