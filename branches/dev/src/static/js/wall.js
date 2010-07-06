@@ -78,6 +78,9 @@ var controller = function(wall){
 		//Called if ajax request is successfull.
 		requestOK:function(){
 			window.location = nextPage;
+		},
+		requestError:function(msg){
+			alert(msg);
 		}
 	};
 	return controller;
@@ -88,7 +91,8 @@ $(function(){
 
 	logger.log("Initialize objects");
 	$("#mainTabs").tabs();
-	$("#postCount").html(postCount);
+	if(window.postCount)
+		$("#postCount").html(postCount);
 
 	controller.setPageValues();
 	logger.log("set submit button action");

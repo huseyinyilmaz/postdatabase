@@ -7,6 +7,7 @@
 <script type="text/javascript" src="/static/js/logger.js"></script>
 <script type="text/javascript">
 logger.enableLog = true;
+{%if wall %}
 var wall = {
 	id:	{{wall.key.id}},
     owner:	"{{wall.owner}}",
@@ -32,6 +33,36 @@ var wall = {
     formHeight:	{{wall.formHeight}}
 };
 var postCount= {{postCount}};
+{% else %}
+{% comment %}
+This is create wall.
+Default values goes here
+{% endcomment %}
+var wall = {
+	id:	null,
+    owner:	null,
+    date: null,
+	//General Tab Attributes
+    name:	null,
+    pageSize:	20,
+    allowEntry:	true,
+    allowRead:	true,
+    allowHtml:	false,
+    emailOnSubmit:	false,
+    lastSavedFirst:	true,
+
+    wallStyle:	1,
+    nickLabel:	"nick",
+    nick2Label:	"email",
+    postAreaLabel:	"Post Value",
+    postButtonLabel:	"Post",
+    resetButtonLabel:	"Clear Form",
+    postStyle:	1,
+    dateStyle:	1,
+    formWidth:	200,
+    formHeight:	4
+};
+{% endif %}
 var posturl="{{url}}";
 var nextPage="/settings";
 </script>
@@ -170,7 +201,11 @@ var nextPage="/settings";
 </div>
 	<button id="submitButton">Submit</button>
 	<button id="cancelButton">Cancel</button>
+{% if wall %}
 Number of posts:<span id="postCount"></span> - <a href="/wall/clear?id={{ wall.key.id }}">Clear all posts</a>
+
+{% endif %}
+
 </div>
 </body>
 </html>
