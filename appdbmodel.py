@@ -22,7 +22,12 @@ class Wall(db.Model):
     infoBackgroundColor = db.StringProperty(multiline=False,required=True)
     infoForegroundColor = db.StringProperty(multiline=False,required=True)
     emailOnSubmit=db.BooleanProperty(required=True)
-    
+    #Custom element desings
+    wallScript = db.BlobProperty(required=False)
+    formScript = db.BlobProperty(required=False)
+    pageButtonScript = db.BlobProperty(required=False)
+    postScript = db.BlobProperty(required=False)
+    postsScript = db.BlobProperty(required=False)
 class Post(db.Model):
     wall = db.ReferenceProperty(Wall,required=True)
     nick =  db.StringProperty(multiline=False,required=False)
