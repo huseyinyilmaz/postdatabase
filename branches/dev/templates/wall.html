@@ -30,7 +30,12 @@ var wall = {
     postStyle:	{{wall.postStyle}},
     dateStyle:	{{wall.dateStyle}},
     formWidth:	{{wall.formWidth}},
-    formHeight:	{{wall.formHeight}}
+    formHeight:	{{wall.formHeight}},
+	wallScript: {{wall.wallScript}},
+	formScript: {{wall.formScript}},
+	pageButtonScript: {{wall.pageButtonScript}},
+	postScript: {{wall.postScript}},
+	postsScript: {{wall.postsScript}}
 };
 var postCount= {{postCount}};
 {% else %}
@@ -60,7 +65,12 @@ var wall = {
     postStyle:	1,
     dateStyle:	1,
     formWidth:	200,
-    formHeight:	4
+    formHeight:	4,
+	wallScript: {{wall.wallScript}},
+	formScript: {{wall.formScript}},
+	pageButtonScript: {{wall.pageButtonScript}},
+	postScript: {{wall.postScript}},
+	postsScript: {{wall.postsScript}}
 };
 {% endif %}
 var posturl="{{url}}";
@@ -82,9 +92,9 @@ var nextPage="/settings";
 		<li><a href="#general">General</a></li>
 		<li><a href="#generalStyle">General Style</a></li>
 		<li><a href="#formAttributes">Form Attributes</a></li>
+		<li><a href="#formStyle">Form Style</a></li>
 		<li><a href="#postStyle">Post Style</a></li>
 		<li><a href="#dateStyle">Date Style</a></li>
-
 	</ul>
 <!-------------General Tab-------------->
 	<div id="general">
@@ -125,7 +135,7 @@ var nextPage="/settings";
 		</table>
 
 	</div>
-	<!------------General tabs------------->
+	<!------------General style tab------------->
 	<div id="generalStyle">
 		<table class="ui-widget ui-widget-content">
 		<tr><td><input type="radio" name="wallStyle" value="1"/>Standart Post(first an entry form and than a post list)</td></tr>
@@ -134,6 +144,7 @@ var nextPage="/settings";
 		<tr><td><input type="radio" name="wallStyle" value="4"/>Standart Post(Reversed version - first post list and then  an entry form)</td></tr>
 		</table>
 	</div>
+	<!------------form attributes tab------------->
 	<div id="formAttributes">
 		<table class="ui-widget ui-widget-content">
 		<tr>
@@ -172,6 +183,15 @@ var nextPage="/settings";
 			<td><div id="formWidthAlert" class="validation_error"></div></td>
 		</tr>
 		</table>
+	</div>
+	<!------------form style tab------------->
+	<div id="formStyle">
+		<table class="ui-widget ui-widget-content">
+		<tr><td><input type="radio" name="formStyle" value="1"/>Use default form</td></tr>
+		<tr><td><input type="radio" name="formStyle" value="2"/>Use Custom form</td></tr>
+		<tr><td><textarea id="formStyleTextArea" cols="100" rows="10"></textarea></td></tr>
+		</table>		
+		
 	</div>
 	<!--------Post Style-------------->
 	<div id="postStyle">

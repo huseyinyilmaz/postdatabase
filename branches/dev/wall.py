@@ -91,7 +91,12 @@ class CreateWallHandler(webapp.RequestHandler):
             lastSavedFirst=self.request.get('lastSavedFirst')
             formWidth = int(self.request.get('formWidth'))
             formHeight = int(self.request.get('formHeight'))
-            emailOnSubmit=self.request.get('emailOnSubmit')        
+            emailOnSubmit=self.request.get('emailOnSubmit')
+            wallScript=self.request.get('wallScript')
+            formScript=self.request.get('formScript')
+            pageButtonScript=self.request.get('pageButtonScript')
+            postScript=self.request.get('postScript')
+            postsScript=self.request.get('postsScript')
             if not wallName.isalnum():
                 raise Exception('Wall name has to contain only letters and numbers and can not be empty string')
             same_query = Wall.all()
@@ -121,7 +126,12 @@ class CreateWallHandler(webapp.RequestHandler):
                             formHeight=formHeight,
                             infoBackgroundColor='Yellow',
                             infoForegroundColor='Red',
-                            emailOnSubmit = emailOnSubmit=='true'
+                            emailOnSubmit = emailOnSubmit=='true',
+                            wallScript = db.Blob(wallScript),
+                            formScript = db.Blob(formScript),
+                            pageButtonScript = db.Blob(pageButtonScript),
+                            postScript = db.Blob(postScript),
+                            postsScript = db.Blob(postsScript)
                             )
                 wall.put()
                 self.response.out.write('controller.requestOK();')        
@@ -169,6 +179,11 @@ class EditWallHandler(webapp.RequestHandler):
         formWidth = int(self.request.get('formWidth'))
         formHeight = int(self.request.get('formHeight'))
         emailOnSubmit=self.request.get('emailOnSubmit')
+        wallScript=self.request.get('wallScript')
+        formScript=self.request.get('formScript')
+        pageButtonScript=self.request.get('pageButtonScript')
+        postScript=self.request.get('postScript')
+        postsScript=self.request.get('postsScript')
         
         wall = Wall.get_by_id(wall_id)
         wall.name = wallName
@@ -188,7 +203,13 @@ class EditWallHandler(webapp.RequestHandler):
         wall.formWidth = formWidth
         wall.formHeight = formHeight
         wall.emailOnSubmit = emailOnSubmit =='true'
+        wall.wallScript = db.Blob(wallScript)
+        wall.formScript = db.Blob(formScript)
+        wall.pageButtonScript = db.Blob(pageButtonScript)
+        wall.postScript = db.Blob(postScript)
+        wall.postsScript = db.Blob(postsScript)
         wall.put()
+        
         logging.info('Wall saved successfully')
         #self.redirect('/settings')
         self.response.headers['Content-Type'] = 'text/javascript'

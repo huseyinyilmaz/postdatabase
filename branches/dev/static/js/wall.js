@@ -66,6 +66,13 @@ var controller = function(wall){
 			$("#formHeight").val(wall.formHeight);
 			$("#formWidth").val(wall.formWidth);
 		
+			logger.log("Set Form Style");
+			if (wall.formScript) {
+				$("input[name=formStyle]:eq(1)").attr("checked",true);
+				$("#formStyleTextArea").val(wall.formScript);
+			}else{
+				$("input[name=formStyle]:eq(0)").attr("checked",true);
+			}
 			logger.log("Set post style tab values");
 			$("input[name=postStyle]:eq("+ (wall.postStyle-1) +")").attr("checked",true);
 		
