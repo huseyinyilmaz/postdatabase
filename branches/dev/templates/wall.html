@@ -31,11 +31,11 @@ var wall = {
     dateStyle:	{{wall.dateStyle}},
     formWidth:	{{wall.formWidth}},
     formHeight:	{{wall.formHeight}},
-	wallScript: {{wall.wallScript}},
-	formScript: {{wall.formScript}},
-	pageButtonScript: {{wall.pageButtonScript}},
-	postScript: {{wall.postScript}},
-	postsScript: {{wall.postsScript}}
+	wallScript: {%if wall.wallScript%}{{wall.wallScript}}{%else%}null{%endif%},
+	formScript: {%if wall.formScript%}"{{wall.formScript}}"{%else%}null{%endif%},
+	pageButtonScript: {%if wall.pageButtonScript%}"{{wall.pageButtonScript}}"{%else%}null{%endif%},
+	postScript: {%if wall.postScript%}"{{wall.postScript}}"{%else%}null{%endif%},
+	postsScript: {%if wall.postsScript%}"{{wall.postsScript}}"{%else%}null{%endif%}
 };
 var postCount= {{postCount}};
 {% else %}
@@ -66,11 +66,11 @@ var wall = {
     dateStyle:	1,
     formWidth:	200,
     formHeight:	4,
-	wallScript: {{wall.wallScript}},
-	formScript: {{wall.formScript}},
-	pageButtonScript: {{wall.pageButtonScript}},
-	postScript: {{wall.postScript}},
-	postsScript: {{wall.postsScript}}
+	wallScript: null,
+	formScript: null,
+	pageButtonScript: null,
+	postScript: null,
+	postsScript: null
 };
 {% endif %}
 var posturl="{{url}}";

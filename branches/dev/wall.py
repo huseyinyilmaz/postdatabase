@@ -133,6 +133,8 @@ class CreateWallHandler(webapp.RequestHandler):
                             postScript = db.Blob(postScript),
                             postsScript = db.Blob(postsScript)
                             )
+                if wall.formScript:
+                    logging.info('we have form script which is ' + wall.formScript)
                 wall.put()
                 self.response.out.write('controller.requestOK();')        
         except Exception as e:
