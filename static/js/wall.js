@@ -28,12 +28,17 @@ var controller = function(wall){
 			dataString+="&resetButtonLabel="+encodeURI($("#resetButtonLabel").val());
 			dataString+="&formHeight="+$("#formHeight").val();
 			dataString+="&formWidth="+$("#formWidth").val();
+
+			//Adding form style tab to data string			
+			if($("input[name=formStyle]:eq(0)").attr("checked"))
+				dataString+="&formStyle="+$("#formStyleTextArea").val();
 			
 			//Addint post style tab to data string
 			dataString+="&postStyle="+$("input[name=postStyle]:checked").val();
 		
 			//Addint date style tab to data string
 			dataString+="&dateStyle="+$("input[name=dateStyle]:checked").val();
+			
 			
 			logger.log("Data String =[" + dataString + "]");
 			logger.endLog();
