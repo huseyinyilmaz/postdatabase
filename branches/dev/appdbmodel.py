@@ -23,11 +23,11 @@ class Wall(db.Model):
     infoForegroundColor = db.StringProperty(multiline=False,required=True)
     emailOnSubmit=db.BooleanProperty(required=True)
     #Custom element desings
-    wallScript = db.BlobProperty(required=False)
-    formScript = db.BlobProperty(required=False)
-    pageButtonScript = db.BlobProperty(required=False)
-    postScript = db.BlobProperty(required=False)
-    postsScript = db.BlobProperty(required=False)
+    wallScript = db.TextProperty(required=False)
+    formScript = db.TextProperty(required=False)
+    pageButtonScript = db.TextProperty(required=False)
+    postScript = db.TextProperty(required=False)
+    postsScript = db.TextProperty(required=False)
 class Post(db.Model):
     wall = db.ReferenceProperty(Wall,required=True)
     nick =  db.StringProperty(multiline=False,required=False)

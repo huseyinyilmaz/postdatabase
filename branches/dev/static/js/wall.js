@@ -30,8 +30,8 @@ var controller = function(wall){
 			dataString+="&formWidth="+$("#formWidth").val();
 
 			//Adding form style tab to data string			
-			if($("input[name=formStyle]:eq(0)").attr("checked"))
-				dataString+="&formStyle="+$("#formStyleTextArea").val();
+			if($("input[name=formStyle]:eq(1)").attr("checked"))
+				dataString+="&formScript="+$("#formStyleTextArea").val();
 			
 			//Addint post style tab to data string
 			dataString+="&postStyle="+$("input[name=postStyle]:checked").val();
