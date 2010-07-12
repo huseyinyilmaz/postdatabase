@@ -6,7 +6,7 @@ from google.appengine.ext import webapp
 import os
 from google.appengine.ext.webapp import template
 from appdbmodel import *
-
+from util import util
 class InitWallHandler(webapp.RequestHandler):
     def replaceChars(self,text):
         result = text
@@ -143,22 +143,22 @@ class CreateWallHandler(webapp.RequestHandler):
 
 class EditWallHandler(webapp.RequestHandler):
     def get(self):
-        wall_id=int(cgi.escape(self.request.get('id')))
+        logging.info('EditWallHandler.get')
+        id_tx = cgi.escape(self.request.get('id'))
+        id=int(id_tx)
+        logging.info('wall id = ' + id_tx)
         #create template values send them to view model.
-        wall = Wall.get_by_id(wall_id)
-        """ 
-        walls_query = Wall.all()
-        walls_query.filter('owner = ',user)
-        walls_query.filter('name != ',wall.name)
-        walls_query.order('name')
-        walls= walls_query.fetch(1000)
-        """
+        wall = Wall.get_by_id(id)
         postQuery = Post.all()
         postQuery.filter('wall =',wall)
         postCount = postQuery.count()
+        logging.info('formScript = ' + wall.formScript)
+        u = util()
         templateValues = {'wall' : wall,
                           'postCount' : postCount,
-                          'url':'/wall/edit'}
+                          'url':'/wall/edit',
+                          'formScript' : u.strToJSStr(wall.formScript)
+}
         path = os.path.join(os.path.dirname(__file__),'templates','wall.html')
         self.response.out.write(template.render(path, templateValues))
     def post(self):
@@ -187,6 +187,8 @@ class EditWallHandler(webapp.RequestHandler):
         postScript=self.request.get('postScript')
         postsScript=self.request.get('postsScript')
         
+        logging.info('formScript = ' + formScript)
+        
         wall = Wall.get_by_id(wall_id)
         wall.name = wallName
         wall.pageSize = pageSize
@@ -205,11 +207,11 @@ class EditWallHandler(webapp.RequestHandler):
         wall.formWidth = formWidth
         wall.formHeight = formHeight
         wall.emailOnSubmit = emailOnSubmit =='true'
-        wall.wallScript = db.Blob(wallScript)
-        wall.formScript = db.Blob(formScript)
-        wall.pageButtonScript = db.Blob(pageButtonScript)
-        wall.postScript = db.Blob(postScript)
-        wall.postsScript = db.Blob(postsScript)
+        wall.wallScript = db.Text(wallScript)
+        wall.formScript = db.Text(formScript)
+        wall.pageButtonScript = db.Text(pageButtonScript)
+        wall.postScript = db.Text(postScript)
+        wall.postsScript = db.Text(postsScript)
         wall.put()
         
         logging.info('Wall saved successfully')
@@ -223,7 +225,6 @@ class DeleteWallHandler(webapp.RequestHandler):
         wall = Wall.get_by_id(wall_id)
         wall.delete()
         self.redirect('/settings');
-
 class ClearWallHandler(webapp.RequestHandler):
     def get(self):
         wall_id=int(cgi.escape(self.request.get('id')))
