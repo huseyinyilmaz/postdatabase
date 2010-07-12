@@ -15,10 +15,10 @@ Wall settings page which is shown when we create and edit wall, will be separate
 
 == General tab ==
 This tab will have general wall attributes
-# *Name:* Name of the wall. We should only except names that will be send with url.
-# *Page Size*
-# *Allow Entries*
-# *Allow Read posts*
-# *Allow HTML*
-# *e-mail new posts*
-# *Show Latest posts first*
+ # Name: Name of the wall. We should only except names that will be send with url.
+ # Page Size
+ # Allow Entries
+ # Allow Read posts
+ # Allow HTML
+ # e-mail new posts
+ # Show Latest posts first
