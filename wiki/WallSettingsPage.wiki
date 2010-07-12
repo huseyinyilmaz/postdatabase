@@ -4,21 +4,21 @@ Tabs and design of settings page
 = Introduction =
 
 Wall settings page which is shown when we create and edit wall, will be separated to 6 different tabs
-* General
-* General style
-* Form attributes
-* Form style
-* Post style
-* General Post style
+  * General
+  * General style
+  * Form attributes
+  * Form style
+  * Post style
+  * General Post style
 
 = Details =
 
 == General tab ==
 This tab will have general wall attributes
- # Name: Name of the wall. We should only except names that will be send with url.
- # Page Size
- # Allow Entries
- # Allow Read posts
- # Allow HTML
- # e-mail new posts
- # Show Latest posts first
+  # Name: Name of the wall. We should only except names that will be send with url.
+  # Page Size
+  # Allow Entries
+  # Allow Read posts
+  # Allow HTML
+  # e-mail new posts
+  # Show Latest posts first
