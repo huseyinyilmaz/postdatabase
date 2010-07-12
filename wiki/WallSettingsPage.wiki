@@ -1,4 +1,4 @@
-#labels Phase-Design
+#labels Phase-Design,wall,wallsettings
 Tabs and design of settings page
 
 = Introduction =
