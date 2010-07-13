@@ -62,7 +62,10 @@ class InitWallHandler(webapp.RequestHandler):
             self.response.out.write(template.render(path, templateValues))
         except Exception:
             self.response.out.write(callbackObject+'.'+callbackFunction + '(None)')
-
+"""-----------------
+    Create Wall Handler
+Handles create wall page
+--------------------"""
 class CreateWallHandler(webapp.RequestHandler):
     def get(self):
         logging.info('CreateWallHandler.post')
@@ -127,11 +130,11 @@ class CreateWallHandler(webapp.RequestHandler):
                             infoBackgroundColor='Yellow',
                             infoForegroundColor='Red',
                             emailOnSubmit = emailOnSubmit=='true',
-                            wallScript = db.Blob(wallScript),
-                            formScript = db.Blob(formScript),
-                            pageButtonScript = db.Blob(pageButtonScript),
-                            postScript = db.Blob(postScript),
-                            postsScript = db.Blob(postsScript)
+                            wallScript = db.Text(wallScript),
+                            formScript = db.Text(formScript),
+                            pageButtonScript = db.Text(pageButtonScript),
+                            postScript = db.Text(postScript),
+                            postsScript = db.Text(postsScript)
                             )
                 if wall.formScript:
                     logging.info('we have form script which is ' + wall.formScript)
@@ -159,7 +162,8 @@ class EditWallHandler(webapp.RequestHandler):
                           'postCount' : postCount,
                           'url':'/wall/edit',
                           'formScript' : self.utility.strToJSStr(wall.formScript),
-                          'postScript' : self.utility.strToJSStr(wall.postScript)
+                          'postScript' : self.utility.strToJSStr(wall.postScript),
+                          'generalPostScript' : self.utility.strToJSStr(wall.generalPostScript)
 }
         path = os.path.join(os.path.dirname(__file__),'templates','wall.html')
         self.response.out.write(template.render(path, templateValues))
@@ -213,7 +217,7 @@ class EditWallHandler(webapp.RequestHandler):
         wall.formScript = db.Text(formScript)
         wall.pageButtonScript = db.Text(pageButtonScript)
         wall.postScript = db.Text(postScript)
-        wall.postsScript = db.Text(postsScript)
+        wall.generalPostScript = db.Text(postsScript)
         wall.put()
         
         logging.info('Wall saved successfully')

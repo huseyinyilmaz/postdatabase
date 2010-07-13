@@ -35,7 +35,7 @@ var wall = {
 	formScript: {%if wall.formScript%}"{{formScript}}"{%else%}null{%endif%},
 	pageButtonScript: {%if wall.pageButtonScript%}"{{wall.pageButtonScript}}"{%else%}null{%endif%},
 	postScript: {%if wall.postScript%}"{{postScript}}"{%else%}null{%endif%},
-	postsScript: {%if wall.postsScript%}"{{wall.postsScript}}"{%else%}null{%endif%}
+	postsScript: {%if wall.generalPostScript%}"{{generalpostScript}}"{%else%}null{%endif%}
 };
 var postCount= {{postCount}};
 {% else %}
@@ -129,10 +129,6 @@ var nextPage="/settings";
 				If you check this we will send you an email whenever you got new post on this wall. we will also keep the post on our database.<br>
 				you can still come to this page and see the posts if you want to.This is recomendend if you have only an entry form on your page.
 			</td></tr>
-			<tr><td colspan="3">
-			<input type="checkbox" id="lastSavedFirst"/>Show Last Posted text first.<br>
-			if you uncheck this order will be reversed.(first post will be shown first)
-			</td></tr>
 		</table>
 
 	</div>
@@ -196,6 +192,14 @@ var nextPage="/settings";
 	</div>
 	<!--------General Post Style-------------->
 	<div id="generalPostStyle">
+				<table class="ui-widget ui-widget-content">
+							<tr><td colspan="3">
+								<input type="checkbox" id="lastSavedFirst"/>Show Last Posted text first.<br>
+if you uncheck this order will be reversed.(first post will be shown first)<br><br></td></tr>
+				<tr><td><input type="radio" name="generalPostStyle" value="1"/>Use standard post list style</td></tr>
+				<tr><td><input type="radio" name="generalPostStyle" value="2"/>Use Custom post list style</td></tr>
+				<tr><td><textarea id="generalPostStyleTextArea" cols="50" rows="10"></textarea></td></tr>
+				</table>
 	</div>
 	<!--------Post Style-------------->
 	<div id="postStyle">
