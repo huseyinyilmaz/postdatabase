@@ -31,10 +31,12 @@ var controller = function(wall){
 
 			//Adding form style tab to data string			
 			if($("input[name=formStyle]:eq(1)").attr("checked"))
-				dataString+="&formScript="+$("#formStyleTextArea").val();
-			
+				dataString+="&formScript="+encodeURI($("#formStyleTextArea").val());
+
 			//Addint post style tab to data string
 			dataString+="&postStyle="+$("input[name=postStyle]:checked").val();
+			if($("input[name=postStyle]:eq(7)").attr("checked"))
+				dataString+="&postScript="+encodeURI($("#postStyleTextArea").val());
 		
 			//Addint date style tab to data string
 			dataString+="&dateStyle="+$("input[name=dateStyle]:checked").val();
@@ -80,7 +82,9 @@ var controller = function(wall){
 			}
 			logger.log("Set post style tab values");
 			$("input[name=postStyle]:eq("+ (wall.postStyle-1) +")").attr("checked",true);
-		
+			if(wall.postScript){
+				$("#postStyleTextArea").val(wall.postScript);
+			}		
 			logger.log("Set date style tab values");
 			$("input[name=dateStyle]:eq("+ (wall.dateStyle-1) +")").attr("checked",true);
 		
@@ -110,18 +114,13 @@ $(function(){
 	logger.log("set submit button action");
 	$("#submitButton").button().click(function(){
 		logger.startLog("submitButton.onClick");
-		
+		var dataString = controller.getDataString();
 		$.ajax({
    				type: "POST",
    				datetype: "script",
 				url: posturl,
-   				data: controller.getDataString()/*,
-				success: function(msg){
-     						alert( "Data Saved: " + msg );
-							window.location = "/settings";
-   						}*/
+   				data: dataString
  		});
-
 		logger.endLog();
 	});
 

@@ -34,7 +34,7 @@ var wall = {
 	wallScript: {%if wall.wallScript%}{{wall.wallScript}}{%else%}null{%endif%},
 	formScript: {%if wall.formScript%}"{{formScript}}"{%else%}null{%endif%},
 	pageButtonScript: {%if wall.pageButtonScript%}"{{wall.pageButtonScript}}"{%else%}null{%endif%},
-	postScript: {%if wall.postScript%}"{{wall.postScript}}"{%else%}null{%endif%},
+	postScript: {%if wall.postScript%}"{{postScript}}"{%else%}null{%endif%},
 	postsScript: {%if wall.postsScript%}"{{wall.postsScript}}"{%else%}null{%endif%}
 };
 var postCount= {{postCount}};
@@ -190,7 +190,7 @@ var nextPage="/settings";
 		<table class="ui-widget ui-widget-content">
 		<tr><td><input type="radio" name="formStyle" value="1"/>Use default form</td></tr>
 		<tr><td><input type="radio" name="formStyle" value="2"/>Use Custom form</td></tr>
-		<tr><td><textarea id="formStyleTextArea" cols="100" rows="10"></textarea></td></tr>
+		<tr><td><textarea id="formStyleTextArea" cols="50" rows="10"></textarea></td></tr>
 		</table>		
 		
 	</div>
@@ -206,8 +206,11 @@ var nextPage="/settings";
 				<tr><td><input type="radio" name="postStyle" value="4"/>Titled Post: Uses nick as title</td></tr>
 				<tr><td><input type="radio" name="postStyle" value="5"/>Indipendent Post: Every Form is in its on table</td></tr>
 				<tr><td><input type="radio" name="postStyle" value="6"/>Dated Post:date on top right corner</td></tr>
-				<tr><td><input type="radio" name="postStyle" value="7"/>Dated Post(footnote): date on bottom right corner.</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="7"/>Dated Post(footnote): date on bottom right corner</td></tr>
+				<tr><td><input type="radio" name="postStyle" value="8"/>Custom Post:write your own html</td></tr>
+				<tr><td><textarea id="postStyleTextArea" cols="50" rows="10"></textarea></td></tr>
 				</table>
+
 	</div>
 	<!--------Date Style-------------->
 	<div id="dateStyle">
