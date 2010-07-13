@@ -6,7 +6,7 @@ from google.appengine.ext import webapp
 import os
 from google.appengine.ext.webapp import template
 from appdbmodel import *
-from util import util
+from util import Util
 class InitWallHandler(webapp.RequestHandler):
     def replaceChars(self,text):
         result = text
@@ -142,6 +142,7 @@ class CreateWallHandler(webapp.RequestHandler):
                 
 
 class EditWallHandler(webapp.RequestHandler):
+    utility = Util()
     def get(self):
         logging.info('EditWallHandler.get')
         id_tx = cgi.escape(self.request.get('id'))
@@ -153,11 +154,12 @@ class EditWallHandler(webapp.RequestHandler):
         postQuery.filter('wall =',wall)
         postCount = postQuery.count()
         logging.info('formScript = ' + wall.formScript)
-        u = util()
+        logging.info('postScirpt = ' + wall.postScript)
         templateValues = {'wall' : wall,
                           'postCount' : postCount,
                           'url':'/wall/edit',
-                          'formScript' : u.strToJSStr(wall.formScript)
+                          'formScript' : self.utility.strToJSStr(wall.formScript),
+                          'postScript' : self.utility.strToJSStr(wall.postScript)
 }
         path = os.path.join(os.path.dirname(__file__),'templates','wall.html')
         self.response.out.write(template.render(path, templateValues))
@@ -188,7 +190,7 @@ class EditWallHandler(webapp.RequestHandler):
         postsScript=self.request.get('postsScript')
         
         logging.info('formScript = ' + formScript)
-        
+        logging.info('postScript = ' + postScript)
         wall = Wall.get_by_id(wall_id)
         wall.name = wallName
         wall.pageSize = pageSize
