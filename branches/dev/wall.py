@@ -191,7 +191,7 @@ class EditWallHandler(webapp.RequestHandler):
         formScript=self.request.get('formScript')
         pageButtonScript=self.request.get('pageButtonScript')
         postScript=self.request.get('postScript')
-        postsScript=self.request.get('postsScript')
+        generalPostScript=self.request.get('generalPostScript')
         
         logging.info('formScript = ' + formScript)
         logging.info('postScript = ' + postScript)
@@ -217,7 +217,7 @@ class EditWallHandler(webapp.RequestHandler):
         wall.formScript = db.Text(formScript)
         wall.pageButtonScript = db.Text(pageButtonScript)
         wall.postScript = db.Text(postScript)
-        wall.generalPostScript = db.Text(postsScript)
+        wall.generalPostScript = db.Text(generalPostScript)
         wall.put()
         
         logging.info('Wall saved successfully')
