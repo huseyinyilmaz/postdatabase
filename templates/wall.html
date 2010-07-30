@@ -89,9 +89,9 @@ var nextPage="/settings";
 <!-- Main Tabs -->
 <div id="mainTabs">
 	<ul>
-		<li><a href="#general">General</a></li>
-		<li><a href="#generalStyle">General Style</a></li>
-		<li><a href="#formAttributes">Form</a></li>
+		<li><a href="#general">General Attributes</a></li>
+		<li><a href="#labels">Labels</a></li>
+		<li><a href="#style">Style</a></li>
 		<li><a href="#formStyle">Form Style</a></li>
 		<li><a href="#generalPostStyle">General Post Style</a></li>
 		<li><a href="#postStyle">Post Style</a></li>
@@ -132,17 +132,8 @@ var nextPage="/settings";
 		</table>
 
 	</div>
-	<!------------General style tab------------->
-	<div id="generalStyle">
-		<table class="ui-widget ui-widget-content">
-		<tr><td><input type="radio" name="wallStyle" value="1"/>Standart Post(first an entry form and than a post list)</td></tr>
-		<tr><td><input type="radio" name="wallStyle" value="2"/>Only an entry form(you can use this instead of giving your email address)</td></tr>
-		<tr><td><input type="radio" name="wallStyle" value="3"/>Blog Style(only post data, no entry form.If you choose this. please also close entries from outside.)</td></tr>
-		<tr><td><input type="radio" name="wallStyle" value="4"/>Standart Post(Reversed version - first post list and then  an entry form)</td></tr>
-		</table>
-	</div>
-	<!------------form attributes tab------------->
-	<div id="formAttributes">
+	<!------------labels tab------------->
+	<div id="labels">
 		<table class="ui-widget ui-widget-content">
 		<tr>
 		 	<td>Nick Label</td>
@@ -179,6 +170,15 @@ var nextPage="/settings";
 			<td><input type="text" id="formWidth" maxlength="50"></td>
 			<td><div id="formWidthAlert" class="validation_error"></div></td>
 		</tr>
+		</table>
+	</div>
+	<!------------style tab------------->
+	<div id="style">
+		<table class="ui-widget ui-widget-content">
+		<tr><td><input type="radio" name="wallStyle" value="1"/>Standart Post(first an entry form and than a post list)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="2"/>Only an entry form(you can use this instead of giving your email address)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="3"/>Blog Style(only post data, no entry form.If you choose this. please also close entries from outside.)</td></tr>
+		<tr><td><input type="radio" name="wallStyle" value="4"/>Standart Post(Reversed version - first post list and then  an entry form)</td></tr>
 		</table>
 	</div>
 	<!------------form style tab------------->
